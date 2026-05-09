@@ -77,6 +77,12 @@ a {
   background: #173b58;
 }
 
+.nav a.active {
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+}
+
 .logout-form {
   margin-top: 18px;
 }

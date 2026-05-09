@@ -28,6 +28,7 @@ export const dateInput = z.coerce.date({
 export const borrowerSchema = z.object({
   name: requiredString,
   identityNumber: requiredString,
+  email: requiredString.email("Format email tidak valid").transform((value) => value.toLowerCase()),
   phone: requiredString,
   accountType: accountTypeSchema
 });

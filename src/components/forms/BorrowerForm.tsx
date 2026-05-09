@@ -7,6 +7,7 @@ type BorrowerFormProps = {
   borrower?: {
     name: string;
     identityNumber: string;
+    email: string | null;
     phone: string;
     accountType: "MAHASISWA" | "DOSEN";
   };
@@ -19,11 +20,12 @@ export function BorrowerForm({ title, borrower, action }: BorrowerFormProps) {
     <form action={action} className="panel stack">
       <div>
         <h1 className="title">{title}</h1>
-        <p className="subtitle">Field wajib diisi sebelum data disimpan.</p>
+        <p className="subtitle">Email menjadi username login. Password awal memakai NIM/NIK.</p>
       </div>
       <div className="form-grid">
         <label>Nama<input name="name" defaultValue={borrower?.name} required /></label>
         <label>NIM/NIK<input name="identityNumber" defaultValue={borrower?.identityNumber} required /></label>
+        <label>Email<input name="email" defaultValue={borrower?.email ?? ""} required type="email" /></label>
         <label>Nomor HP<input name="phone" defaultValue={borrower?.phone} required /></label>
         <label>Jenis Akun
           <select name="accountType" defaultValue={borrower?.accountType ?? "MAHASISWA"}>

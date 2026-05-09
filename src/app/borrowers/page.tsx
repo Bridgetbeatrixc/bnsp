@@ -34,8 +34,10 @@ export default async function BorrowersPage() {
             <tr>
               <th>Nama</th>
               <th>NIM/NIK</th>
+              <th>Email</th>
               <th>HP</th>
               <th>Jenis</th>
+              <th>Akun Login</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -44,9 +46,22 @@ export default async function BorrowersPage() {
               <tr key={borrower.id}>
                 <td>{borrower.name}</td>
                 <td>{borrower.identityNumber}</td>
+                <td>{borrower.email}</td>
                 <td>{borrower.phone}</td>
                 <td><span className="badge">{borrower.accountType}</span></td>
+                <td>
+                  <div>{borrower.account?.username ?? borrower.email}</div>
+                  <small>Password awal: {borrower.identityNumber}</small>
+                </td>
                 <td className="actions">
+                  {borrower.email ? (
+                    <a
+                      className="button ghost"
+                      href={`mailto:${borrower.email}?subject=Akun%20Peminjaman%20Universitas%20XYZ&body=Halo%20${encodeURIComponent(borrower.name)}%2C%0A%0AAkun%20peminjaman%20Universitas%20XYZ%20Anda%20sudah%20dibuat.%0AUsername%3A%20${encodeURIComponent(borrower.email)}%0APassword%20awal%3A%20${encodeURIComponent(borrower.identityNumber)}%0A%0ASilakan%20login%20dan%20ubah%20password%20jika%20fitur%20ubah%20password%20tersedia.%0A`}
+                    >
+                      Kirim Email
+                    </a>
+                  ) : null}
                   <Link className="button ghost" href={`/borrowers/${borrower.id}/edit`}>
                     Ubah
                   </Link>

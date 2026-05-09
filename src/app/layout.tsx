@@ -34,6 +34,16 @@ const userLinks = [
   ["/borrowings", "Riwayat Saya"]
 ];
 
+// Menentukan apakah link sidebar sedang aktif.
+function isActiveLink(pathname: string, href: string) {
+  // Dashboard hanya aktif di route utama.
+  if (href === "/") {
+    return pathname === "/";
+  }
+  // Route nested seperti /rooms/new tetap menyalakan menu /rooms.
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 // Root layout membungkus semua halaman aplikasi.
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   // Ambil akun login untuk menentukan menu dan tampilan sidebar.
@@ -69,11 +79,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               )}
               <nav className="nav">
                 {links.map(([href, label]) => (
-                  <Link href={href} key={href}>
+                  <Link className={isActiveLink(pathname, href) ? "active" : ""} href={href} key={href}>
                     {label}
                   </Link>
                 ))}
-                {!account ? <Link href="/login">Login</Link> : null}
+                {!account ? <Link className={isActiveLink(pathname, "/login") ? "active" : ""} href="/login">Login</Link> : null}
               </nav>
               {account ? (
                 // Logout hanya muncul jika user sudah login.

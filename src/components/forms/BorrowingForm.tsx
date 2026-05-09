@@ -2,6 +2,8 @@
 
 // Link dipakai untuk tombol kembali ke halaman peminjaman.
 import Link from "next/link";
+// Tipe event React dipakai untuk validasi input angka di browser.
+import type { ClipboardEvent, KeyboardEvent } from "react";
 // useState dipakai untuk menambah/menghapus baris peralatan secara dinamis.
 import { useState } from "react";
 
@@ -39,14 +41,14 @@ type EquipmentRow = {
 const blockedNumberKeys = ["-", "+", "e", "E", "."];
 
 // Mencegah user mengetik minus, plus, desimal, atau notasi eksponen.
-function preventInvalidNumberKey(event: React.KeyboardEvent<HTMLInputElement>) {
+function preventInvalidNumberKey(event: KeyboardEvent<HTMLInputElement>) {
   if (blockedNumberKeys.includes(event.key)) {
     event.preventDefault();
   }
 }
 
 // Mencegah paste nilai negatif atau teks non-angka ke field angka.
-function preventInvalidNumberPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+function preventInvalidNumberPaste(event: ClipboardEvent<HTMLInputElement>) {
   const pastedText = event.clipboardData.getData("text");
   if (!/^\d+$/.test(pastedText)) {
     event.preventDefault();

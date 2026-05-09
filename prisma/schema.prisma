@@ -34,6 +34,7 @@ model Borrower {
   id             String      @id @default(cuid())
   name           String
   identityNumber String      @unique
+  email          String?     @unique
   phone          String
   accountType    AccountType
   account        Account?

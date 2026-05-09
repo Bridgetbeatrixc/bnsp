@@ -11,10 +11,15 @@ async function main() {
   // Seed contoh peminjam mahasiswa.
   const borrower = await prisma.borrower.upsert({
     where: { identityNumber: "220001" },
-    update: {},
     create: {
       name: "Alya Putri",
       identityNumber: "220001",
+      email: "alya@universitasxyz.ac.id",
+      phone: "08123456789",
+      accountType: "MAHASISWA"
+    },
+    update: {
+      email: "alya@universitasxyz.ac.id",
       phone: "08123456789",
       accountType: "MAHASISWA"
     }
@@ -23,10 +28,15 @@ async function main() {
   // Seed contoh peminjam dosen.
   const lecturer = await prisma.borrower.upsert({
     where: { identityNumber: "198801012020121001" },
-    update: {},
     create: {
       name: "Dr. Bima Santoso",
       identityNumber: "198801012020121001",
+      email: "bima@universitasxyz.ac.id",
+      phone: "081298765432",
+      accountType: "DOSEN"
+    },
+    update: {
+      email: "bima@universitasxyz.ac.id",
       phone: "081298765432",
       accountType: "DOSEN"
     }

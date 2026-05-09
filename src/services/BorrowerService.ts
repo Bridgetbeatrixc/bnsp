@@ -1,5 +1,7 @@
 // Prisma dipakai untuk query tabel Borrower.
 import { prisma } from "@/lib/prisma";
+// Hash password dipakai untuk membuat akun login otomatis.
+import { hashPassword } from "@/lib/password";
 // Schema validasi peminjam dipakai sebelum create/update.
 import { borrowerSchema } from "@/lib/validation";
 
@@ -7,7 +9,10 @@ import { borrowerSchema } from "@/lib/validation";
 export class BorrowerService {
   // Mengambil semua peminjam terbaru.
   findAll() {
-    return prisma.borrower.findMany({ orderBy: { createdAt: "desc" } });
+    return prisma.borrower.findMany({
+      include: { account: true },
+      orderBy: { createdAt: "desc" }
+    });
   }
 
   // Mengambil satu peminjam berdasarkan id.
@@ -18,13 +23,44 @@ export class BorrowerService {
   // Membuat peminjam baru setelah validasi.
   create(input: unknown) {
     const data = borrowerSchema.parse(input);
-    return prisma.borrower.create({ data });
+    return prisma.borrower.create({
+      data: {
+        ...data,
+        account: {
+          create: {
+            // Email dipakai sebagai username agar mudah dikirim ke peminjam.
+            username: data.email,
+            // Password awal dibuat dari NIM/NIK agar admin tidak perlu menentukan password manual.
+            passwordHash: hashPassword(data.identityNumber),
+            role: data.accountType
+          }
+        }
+      }
+    });
   }
 
   // Mengubah peminjam berdasarkan id setelah validasi.
   update(id: string, input: unknown) {
     const data = borrowerSchema.parse(input);
-    return prisma.borrower.update({ where: { id }, data });
+    return prisma.borrower.update({
+      where: { id },
+      data: {
+        ...data,
+        account: {
+          upsert: {
+            create: {
+              username: data.email,
+              passwordHash: hashPassword(data.identityNumber),
+              role: data.accountType
+            },
+            update: {
+              username: data.email,
+              role: data.accountType
+            }
+          }
+        }
+      }
+    });
   }
 
   // Menghapus peminjam berdasarkan id.

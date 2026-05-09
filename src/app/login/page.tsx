@@ -18,10 +18,10 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
       <form action={login} className="panel stack">
         <div>
           <h1 className="title">Login Akun</h1>
-          <p className="subtitle">Masuk sebagai admin, mahasiswa, atau dosen.</p>
+          <p className="subtitle">Masuk sebagai admin, mahasiswa, atau dosen. Akun baru memakai email sebagai username.</p>
         </div>
         <label>
-          Username
+          Username / Email
           <input name="username" required />
         </label>
         <label>

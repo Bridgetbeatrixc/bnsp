@@ -13,6 +13,19 @@ describe("critical input validation", () => {
       borrowerSchema.parse({
         name: "",
         identityNumber: "22001",
+        email: "alya@example.com",
+        phone: "08123456789",
+        accountType: "MAHASISWA"
+      })
+    ).toThrow();
+  });
+
+  it("rejects invalid borrower email", () => {
+    expect(() =>
+      borrowerSchema.parse({
+        name: "Alya Putri",
+        identityNumber: "22001",
+        email: "bukan-email",
         phone: "08123456789",
         accountType: "MAHASISWA"
       })
