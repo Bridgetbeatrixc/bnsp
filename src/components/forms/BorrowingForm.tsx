@@ -35,6 +35,24 @@ type EquipmentRow = {
   id: number;
 };
 
+// Tombol ini tidak boleh masuk ke field angka positif.
+const blockedNumberKeys = ["-", "+", "e", "E", "."];
+
+// Mencegah user mengetik minus, plus, desimal, atau notasi eksponen.
+function preventInvalidNumberKey(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (blockedNumberKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
+
+// Mencegah paste nilai negatif atau teks non-angka ke field angka.
+function preventInvalidNumberPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+  const pastedText = event.clipboardData.getData("text");
+  if (!/^\d+$/.test(pastedText)) {
+    event.preventDefault();
+  }
+}
+
 // Format tanggal dan jam mulai agar mudah dibaca user Indonesia.
 function formatDateTime(value: string) {
   // Ubah string ISO dari server menjadi Date di browser.
@@ -102,7 +120,18 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
         </label>
         <label>Tanggal Pengajuan<input name="requestDate" type="date" required /></label>
         <label>Tanggal dan Jam Pakai<input name="usageDate" type="datetime-local" required /></label>
-        <label>Durasi Jam<input name="durationHours" type="number" min="1" required /></label>
+        <label>Durasi Jam
+          <input
+            inputMode="numeric"
+            min="1"
+            name="durationHours"
+            onKeyDown={preventInvalidNumberKey}
+            onPaste={preventInvalidNumberPaste}
+            pattern="[0-9]*"
+            required
+            type="number"
+          />
+        </label>
       </div>
       <label>Keperluan<textarea name="purpose" required /></label>
       <div className="panel">
@@ -122,7 +151,17 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
                 </select>
               </label>
               <label>Jumlah
-                <input name="quantity" type="number" min="1" placeholder="Jumlah" required />
+                <input
+                  inputMode="numeric"
+                  min="1"
+                  name="quantity"
+                  onKeyDown={preventInvalidNumberKey}
+                  onPaste={preventInvalidNumberPaste}
+                  pattern="[0-9]*"
+                  placeholder="Jumlah"
+                  required
+                  type="number"
+                />
               </label>
               <button className="danger" onClick={() => removeEquipmentRow(row.id)} type="button">
                 Hapus

@@ -1,5 +1,25 @@
+"use client";
+
 // Link dipakai untuk tombol batal kembali ke daftar peralatan.
 import Link from "next/link";
+
+// Tombol ini tidak boleh masuk ke field angka.
+const blockedNumberKeys = ["-", "+", "e", "E", "."];
+
+// Mencegah user mengetik nilai negatif atau angka tidak utuh.
+function preventInvalidNumberKey(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (blockedNumberKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
+
+// Mencegah paste nilai negatif atau teks non-angka.
+function preventInvalidNumberPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+  const pastedText = event.clipboardData.getData("text");
+  if (!/^\d+$/.test(pastedText)) {
+    event.preventDefault();
+  }
+}
 
 // Props form peralatan dipakai untuk mode tambah dan ubah.
 type EquipmentFormProps = {
@@ -25,7 +45,19 @@ export function EquipmentForm({ title, equipment, action }: EquipmentFormProps) 
         <label>Kode<input name="code" defaultValue={equipment?.code} required /></label>
         <label>Nama<input name="name" defaultValue={equipment?.name} required /></label>
         <label>Kategori<input name="category" defaultValue={equipment?.category} required /></label>
-        <label>Stok<input name="stock" type="number" min="0" defaultValue={equipment?.stock ?? 0} required /></label>
+        <label>Stok
+          <input
+            defaultValue={equipment?.stock ?? 0}
+            inputMode="numeric"
+            min="0"
+            name="stock"
+            onKeyDown={preventInvalidNumberKey}
+            onPaste={preventInvalidNumberPaste}
+            pattern="[0-9]*"
+            required
+            type="number"
+          />
+        </label>
       </div>
       <div className="actions">
         <button type="submit">Simpan</button>

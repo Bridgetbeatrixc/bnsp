@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   borrowerSchema,
+  equipmentSchema,
   borrowingSchema,
+  roomSchema,
   validateEquipmentStock
 } from "@/lib/validation";
 
@@ -27,6 +29,51 @@ describe("critical input validation", () => {
         durationHours: 0,
         purpose: "Seminar",
         equipmentItems: [{ equipmentId: "equipment-1", quantity: 1 }]
+      })
+    ).toThrow();
+
+    expect(() =>
+      borrowingSchema.parse({
+        borrowerId: "borrower-1",
+        roomId: "room-1",
+        requestDate: "2026-05-09",
+        usageDate: "2026-05-10",
+        durationHours: -1,
+        purpose: "Seminar",
+        equipmentItems: [{ equipmentId: "equipment-1", quantity: 1 }]
+      })
+    ).toThrow();
+  });
+
+  it("rejects negative room and equipment numbers", () => {
+    expect(() =>
+      roomSchema.parse({
+        code: "KLS-001",
+        name: "Ruang Kelas",
+        capacity: -1,
+        building: "Gedung A",
+        floor: 1,
+        status: "TERSEDIA"
+      })
+    ).toThrow();
+
+    expect(() =>
+      roomSchema.parse({
+        code: "KLS-001",
+        name: "Ruang Kelas",
+        capacity: 30,
+        building: "Gedung A",
+        floor: -1,
+        status: "TERSEDIA"
+      })
+    ).toThrow();
+
+    expect(() =>
+      equipmentSchema.parse({
+        code: "CAM-001",
+        name: "Kamera",
+        stock: -1,
+        category: "Dokumentasi"
       })
     ).toThrow();
   });

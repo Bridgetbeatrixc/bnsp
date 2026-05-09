@@ -1,5 +1,25 @@
+"use client";
+
 // Link dipakai untuk tombol batal kembali ke daftar ruang.
 import Link from "next/link";
+
+// Tombol ini tidak boleh masuk ke field angka.
+const blockedNumberKeys = ["-", "+", "e", "E", "."];
+
+// Mencegah user mengetik nilai negatif atau angka tidak utuh.
+function preventInvalidNumberKey(event: React.KeyboardEvent<HTMLInputElement>) {
+  if (blockedNumberKeys.includes(event.key)) {
+    event.preventDefault();
+  }
+}
+
+// Mencegah paste nilai negatif atau teks non-angka.
+function preventInvalidNumberPaste(event: React.ClipboardEvent<HTMLInputElement>) {
+  const pastedText = event.clipboardData.getData("text");
+  if (!/^\d+$/.test(pastedText)) {
+    event.preventDefault();
+  }
+}
 
 // Props form ruang dipakai untuk mode tambah dan ubah.
 type RoomFormProps = {
@@ -26,9 +46,33 @@ export function RoomForm({ title, room, action }: RoomFormProps) {
       <div className="form-grid">
         <label>Kode<input name="code" defaultValue={room?.code} required /></label>
         <label>Nama<input name="name" defaultValue={room?.name} required /></label>
-        <label>Kapasitas<input name="capacity" type="number" min="1" defaultValue={room?.capacity} required /></label>
+        <label>Kapasitas
+          <input
+            defaultValue={room?.capacity}
+            inputMode="numeric"
+            min="1"
+            name="capacity"
+            onKeyDown={preventInvalidNumberKey}
+            onPaste={preventInvalidNumberPaste}
+            pattern="[0-9]*"
+            required
+            type="number"
+          />
+        </label>
         <label>Gedung<input name="building" defaultValue={room?.building} required /></label>
-        <label>Lantai<input name="floor" type="number" min="0" defaultValue={room?.floor ?? 1} required /></label>
+        <label>Lantai
+          <input
+            defaultValue={room?.floor ?? 1}
+            inputMode="numeric"
+            min="0"
+            name="floor"
+            onKeyDown={preventInvalidNumberKey}
+            onPaste={preventInvalidNumberPaste}
+            pattern="[0-9]*"
+            required
+            type="number"
+          />
+        </label>
         <label>Status
           <select name="status" defaultValue={room?.status ?? "TERSEDIA"}>
             <option value="TERSEDIA">Tersedia</option>

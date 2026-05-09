@@ -166,7 +166,8 @@ export async function createBorrowing(formData: FormData) {
       equipmentId,
       quantity: quantities[index]
     }))
-    .filter((item) => item.equipmentId && item.quantity > 0);
+    // Simpan semua baris yang memilih barang agar quantity negatif tetap ditolak oleh Zod.
+    .filter((item) => item.equipmentId);
 
   // Ubah FormData utama menjadi object biasa.
   const formObject = toObject(formData);
