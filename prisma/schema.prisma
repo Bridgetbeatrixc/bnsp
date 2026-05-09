@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccountType {
+  MAHASISWA
+  DOSEN
+}
+
+enum RoomStatus {
+  TERSEDIA
+  TIDAK_TERSEDIA
+}
+
+enum BorrowingStatus {
+  MENUNGGU
+  DISETUJUI
+  DITOLAK
+  SELESAI
+}
+
+enum UserRole {
+  ADMIN
+  MAHASISWA
+  DOSEN
+}
+
+model Borrower {
+  id             String      @id @default(cuid())
+  name           String
+  identityNumber String      @unique
+  phone          String
+  accountType    AccountType
+  account        Account?
+  borrowings     Borrowing[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model Account {
+  id           String    @id @default(cuid())
+  username     String    @unique
+  passwordHash String
+  role         UserRole
+  borrowerId   String?   @unique
+  borrower     Borrower? @relation(fields: [borrowerId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Room {
+  id          String      @id @default(cuid())
+  code        String      @unique
+  name        String
+  capacity    Int
+  building    String
+  floor       Int
+  status      RoomStatus  @default(TERSEDIA)
+  borrowings  Borrowing[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model Equipment {
+  id                 String               @id @default(cuid())
+  code               String               @unique
+  name               String
+  stock              Int
+  category           String
+  borrowingEquipment BorrowingEquipment[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+model Borrowing {
+  id                 String               @id @default(cuid())
+  borrowerId         String
+  roomId             String?
+  requestDate        DateTime
+  usageDate          DateTime
+  durationHours      Int
+  status             BorrowingStatus      @default(MENUNGGU)
+  actualReturnTime   DateTime?
+  purpose            String
+  borrower           Borrower             @relation(fields: [borrowerId], references: [id], onDelete: Restrict)
+  room               Room?                @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  equipmentItems     BorrowingEquipment[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+model BorrowingEquipment {
+  id          String    @id @default(cuid())
+  borrowingId String
+  equipmentId String
+  quantity    Int
+  borrowing   Borrowing @relation(fields: [borrowingId], references: [id], onDelete: Cascade)
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Restrict)
+
+  @@unique([borrowingId, equipmentId])
+}
