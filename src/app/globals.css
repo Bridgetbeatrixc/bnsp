@@ -54,12 +54,28 @@ a {
   display: grid;
   gap: 4px;
   margin-bottom: 22px;
+  min-width: 0;
+  overflow: hidden;
   padding: 12px;
+}
+
+.account-box strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.35;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .account-box span,
 .account-box small {
   color: #b7cddd;
+  display: block;
+  line-height: 1.35;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .account-link {
@@ -70,7 +86,10 @@ a {
   font-size: 13px;
   justify-content: center;
   margin-top: 8px;
+  max-width: 100%;
   padding: 8px 10px;
+  text-align: center;
+  white-space: normal;
 }
 
 .account-link:hover {
