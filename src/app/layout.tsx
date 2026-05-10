@@ -40,6 +40,14 @@ function isActiveLink(pathname: string, href: string) {
   if (href === "/") {
     return pathname === "/";
   }
+  // Ajukan peminjaman harus aktif hanya pada halaman form ajukan.
+  if (href === "/borrowings/new") {
+    return pathname === "/borrowings/new";
+  }
+  // Riwayat/peminjaman tidak boleh ikut aktif saat berada di form ajukan.
+  if (href === "/borrowings") {
+    return pathname === "/borrowings";
+  }
   // Route nested seperti /rooms/new tetap menyalakan menu /rooms.
   return pathname === href || pathname.startsWith(`${href}/`);
 }

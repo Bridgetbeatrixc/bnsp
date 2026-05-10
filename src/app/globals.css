@@ -45,17 +45,17 @@
 
   button {
     font: inherit;
-    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border-0 bg-app-primary px-3.5 py-2.5 text-white hover:bg-app-primaryDark active:translate-y-px max-md:min-h-11 max-md:w-full;
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border-0 bg-app-primary px-3.5 py-2.5 text-white hover:bg-app-primaryDark max-md:min-h-11 max-md:w-full;
   }
 }
 
 @layer components {
   .shell {
-    @apply grid min-h-screen grid-cols-[240px_1fr] max-md:grid-cols-1;
+    @apply grid min-h-screen grid-cols-[260px_1fr] max-lg:grid-cols-[220px_1fr] max-md:grid-cols-1;
   }
 
   .sidebar {
-    @apply bg-app-sidebar px-[18px] py-6 text-white max-md:static max-md:px-3.5 max-md:py-4;
+    @apply bg-app-sidebar px-5 py-6 text-white max-lg:px-4 max-md:static max-md:px-3.5 max-md:py-3;
   }
 
   .brand {
@@ -63,24 +63,20 @@
   }
 
   .account-box {
-    @apply mb-[22px] grid min-w-0 gap-1 overflow-hidden rounded-lg bg-app-sidebarPanel p-3 max-md:mb-3.5;
+    @apply mb-5 grid min-w-0 gap-1 overflow-hidden rounded-lg bg-app-sidebarPanel p-3 max-md:mb-3;
   }
 
   .account-box strong {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    @apply block max-w-full text-base leading-snug;
+    @apply block max-w-full truncate text-base leading-snug;
   }
 
   .account-box span,
   .account-box small {
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    @apply block max-w-full leading-snug text-[#b7cddd];
+    @apply block max-w-full truncate leading-snug text-[#b7cddd];
   }
 
   .account-link {
-    @apply mt-2 inline-flex max-w-full justify-center whitespace-normal rounded-md bg-white/10 px-2.5 py-2 text-center text-[13px] text-white hover:bg-white/20 active:translate-y-px;
+    @apply mt-2 inline-flex max-w-full justify-center truncate rounded-md bg-white/10 px-2.5 py-2 text-center text-[13px] text-white hover:bg-white/20;
   }
 
   .account-link.active {
@@ -92,15 +88,15 @@
   }
 
   .nav a {
-    @apply rounded-lg border border-transparent px-3 py-2.5 text-[#d9e7f2] transition hover:bg-app-sidebarPanel max-md:flex-none max-md:whitespace-nowrap max-md:transform-none;
+    @apply rounded-lg border border-transparent px-3 py-2.5 text-[#d9e7f2] hover:bg-app-sidebarPanel max-md:flex-none max-md:whitespace-nowrap;
   }
 
   .nav a.active {
-    @apply translate-x-[3px] border-white/40 bg-app-primary font-bold text-white shadow-activeNav;
+    @apply border-white/30 bg-app-primary font-bold text-white;
   }
 
   .logout-form {
-    @apply mt-[18px] max-md:mt-3;
+    @apply mt-5 max-md:mt-3;
   }
 
   .logout-form button {
@@ -108,7 +104,7 @@
   }
 
   .content {
-    @apply p-7 max-md:p-3.5 max-[420px]:p-2.5;
+    @apply min-w-0 p-7 max-md:p-3.5 max-[420px]:p-2.5;
   }
 
   .topbar {
@@ -168,7 +164,7 @@
   }
 
   .button {
-    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border-0 bg-app-primary px-3.5 py-2.5 text-white hover:bg-app-primaryDark active:translate-y-px max-md:min-h-11 max-md:w-full;
+    @apply inline-flex cursor-pointer items-center justify-center rounded-lg border-0 bg-app-primary px-3.5 py-2.5 text-white hover:bg-app-primaryDark max-md:min-h-11 max-md:w-full;
   }
 
   .text-link {
