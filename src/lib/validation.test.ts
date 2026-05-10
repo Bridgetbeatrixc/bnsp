@@ -4,8 +4,10 @@ import {
   equipmentSchema,
   borrowingSchema,
   roomSchema,
+  statusUpdateSchema,
   validateEquipmentStock
 } from "@/lib/validation";
+import { hashPassword, verifyPassword } from "@/lib/password";
 
 describe("critical input validation", () => {
   it("rejects empty required borrower fields", () => {
@@ -154,5 +156,72 @@ describe("critical input validation", () => {
         equipmentItems: [{ equipmentId: "equipment-1", quantity: 1 }]
       })
     ).not.toThrow();
+  });
+
+  it("rejects completed status without actual return time", () => {
+    expect(() =>
+      statusUpdateSchema.parse({
+        status: "SELESAI",
+        actualReturnTime: ""
+      })
+    ).toThrow();
+  });
+
+  it("accepts completed status with actual return time", () => {
+    expect(() =>
+      statusUpdateSchema.parse({
+        status: "SELESAI",
+        actualReturnTime: "2026-05-10T12:00"
+      })
+    ).not.toThrow();
+  });
+
+  it("accepts approved status without actual return time", () => {
+    expect(() =>
+      statusUpdateSchema.parse({
+        status: "DISETUJUI",
+        actualReturnTime: ""
+      })
+    ).not.toThrow();
+  });
+
+  it("hashes password without storing the plain text", () => {
+    const password = "mahasiswa123";
+    const passwordHash = hashPassword(password);
+
+    expect(passwordHash).not.toBe(password);
+  });
+
+  it("verifies the correct password", () => {
+    const passwordHash = hashPassword("dosen123");
+
+    expect(verifyPassword("dosen123", passwordHash)).toBe(true);
+  });
+
+  it("rejects the wrong password", () => {
+    const passwordHash = hashPassword("admin123");
+
+    expect(verifyPassword("wrong-password", passwordHash)).toBe(false);
+  });
+
+  it("rejects borrowed equipment when stock is unavailable", () => {
+    expect(() =>
+      validateEquipmentStock(
+        [{ equipmentId: "deleted-equipment", quantity: 1 }],
+        new Map()
+      )
+    ).toThrow("Jumlah peralatan");
+  });
+
+  it("normalizes borrower email to lowercase", () => {
+    const borrower = borrowerSchema.parse({
+      name: "Bridget Beatrix",
+      identityNumber: "0706012219001",
+      email: "BRIDGET@EXAMPLE.COM",
+      phone: "08123456789",
+      accountType: "MAHASISWA"
+    });
+
+    expect(borrower.email).toBe("bridget@example.com");
   });
 });
