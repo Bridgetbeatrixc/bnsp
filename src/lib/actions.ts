@@ -16,6 +16,8 @@ import { EquipmentService } from "@/services/EquipmentService";
 import { RoomService } from "@/services/RoomService";
 // Helper auth dipakai untuk session login dan pembatasan role.
 import { clearAccountSession, requireAccount, requireAdmin, setAccountSession } from "@/lib/auth";
+// Helper akses menentukan borrowerId sesuai role login.
+import { resolveBorrowerIdForBorrowing } from "@/lib/access";
 
 // Mengubah FormData dari form HTML menjadi object biasa agar mudah divalidasi.
 const toObject = (formData: FormData) => Object.fromEntries(formData.entries());
@@ -267,8 +269,10 @@ export async function createBorrowing(formData: FormData) {
 
   // Ubah FormData utama menjadi object biasa.
   const formObject = toObject(formData);
+  // Ambil borrower pilihan admin dari form jika ada.
+  const selectedBorrowerId = typeof formObject.borrowerId === "string" ? formObject.borrowerId : undefined;
   // Admin boleh memilih peminjam; mahasiswa/dosen selalu memakai akunnya sendiri.
-  const borrowerId = account.role === "ADMIN" ? formObject.borrowerId : account.borrowerId;
+  const borrowerId = resolveBorrowerIdForBorrowing(account.role, account.borrowerId, selectedBorrowerId);
 
   // Cegah akun tanpa profil peminjam membuat transaksi.
   if (!borrowerId) {
