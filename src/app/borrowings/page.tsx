@@ -83,6 +83,7 @@ export default async function BorrowingsPage({
               <th>Peminjam</th>
               <th>Ruang</th>
               <th>Jadwal</th>
+              <th>Keperluan</th>
               <th>Peralatan</th>
               <th>Status</th>
               {isAdmin ? <th>Update</th> : null}
@@ -98,6 +99,7 @@ export default async function BorrowingsPage({
                   <br />
                   {borrowing.durationHours} jam
                 </td>
+                <td>{borrowing.purpose}</td>
                 <td>
                   {borrowing.equipmentItems.map((item) => (
                     <div key={item.id}>{item.equipment.name} x {item.quantity}</div>
