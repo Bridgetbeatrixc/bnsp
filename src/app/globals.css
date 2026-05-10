@@ -62,6 +62,21 @@ a {
   color: #b7cddd;
 }
 
+.account-link {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: white;
+  display: inline-flex;
+  font-size: 13px;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 8px 10px;
+}
+
+.account-link:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
 .nav {
   display: grid;
   gap: 8px;
@@ -244,6 +259,15 @@ button:hover {
   border: 1px solid #fecdca;
   border-radius: 8px;
   color: var(--danger);
+  margin: 0;
+  padding: 10px 12px;
+}
+
+.success-message {
+  background: #e7f5ef;
+  border: 1px solid #b7e2cd;
+  border-radius: 8px;
+  color: #0f5132;
   margin: 0;
   padding: 10px 12px;
 }

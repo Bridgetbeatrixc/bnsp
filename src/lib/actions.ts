@@ -50,6 +50,24 @@ export async function logout() {
   redirect("/login");
 }
 
+// Mengubah password akun yang sedang login.
+export async function changePassword(formData: FormData) {
+  // Pastikan user sudah login sebelum mengganti password.
+  const account = await requireAccount();
+  // Tangkap error validasi agar halaman tidak menjadi application error.
+  try {
+    // Kirim data password ke service untuk divalidasi dan disimpan.
+    await new AccountService().changePassword(account.id, toObject(formData));
+  } catch {
+    // Jika password lama salah atau konfirmasi tidak cocok, tampilkan pesan error.
+    redirect("/account/password?error=invalid");
+  }
+  // Refresh halaman setelah password berhasil diubah.
+  revalidatePath("/account/password");
+  // Kembali ke halaman ganti password dengan pesan sukses.
+  redirect("/account/password?success=1");
+}
+
 // Membuat data peminjam baru. Hanya admin yang boleh.
 export async function createBorrower(formData: FormData) {
   // Pastikan role user adalah ADMIN.

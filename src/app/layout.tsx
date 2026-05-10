@@ -70,6 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <strong>{account.username}</strong>
                   <span>{account.role}</span>
                   {account.borrower ? <small>{account.borrower.name}</small> : <small>Administrator</small>}
+                  <Link className="account-link" href="/account/password">Ganti Password</Link>
                 </div>
               ) : (
                 <div className="account-box">
