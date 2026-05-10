@@ -77,6 +77,12 @@ a {
   background: rgba(255, 255, 255, 0.18);
 }
 
+.account-link.active {
+  background: white;
+  color: #102a43;
+  font-weight: 700;
+}
+
 .nav {
   display: grid;
   gap: 8px;
@@ -85,7 +91,9 @@ a {
 .nav a {
   border-radius: 8px;
   color: #d9e7f2;
+  border: 1px solid transparent;
   padding: 10px 12px;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
 }
 
 .nav a:hover {
@@ -94,8 +102,18 @@ a {
 
 .nav a.active {
   background: var(--primary);
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: inset 4px 0 0 #ffffff, 0 8px 18px rgba(0, 0, 0, 0.18);
   color: white;
   font-weight: 700;
+  transform: translateX(3px);
+}
+
+.nav a:active,
+.account-link:active,
+.button:active,
+button:active {
+  transform: translateY(1px);
 }
 
 .logout-form {
@@ -299,9 +317,10 @@ button:hover {
   align-items: start;
   display: grid;
   gap: 18px;
-  grid-template-columns: minmax(280px, 420px) 1fr;
+  grid-template-columns: minmax(280px, 420px);
+  justify-content: center;
   margin: 0 auto;
-  max-width: 980px;
+  max-width: 520px;
   width: 100%;
 }
 
@@ -356,6 +375,7 @@ button:hover {
 
   .nav a {
     flex: 0 0 auto;
+    transform: none;
     white-space: nowrap;
   }
 

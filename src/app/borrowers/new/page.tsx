@@ -1,8 +1,16 @@
+import { FlashMessage } from "@/components/FlashMessage";
 import { BorrowerForm } from "@/components/forms/BorrowerForm";
 import { createBorrower } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 
-export default async function NewBorrowerPage() {
+export default async function NewBorrowerPage({ searchParams }: { searchParams?: { error?: string } }) {
   await requireAdmin();
-  return <BorrowerForm action={createBorrower} title="Tambah Peminjam" />;
+  return (
+    <div className="stack">
+      {searchParams?.error === "save" ? (
+        <FlashMessage message="Peminjam gagal disimpan. Periksa field wajib, email, atau NIM/NIK yang sudah dipakai." type="error" />
+      ) : null}
+      <BorrowerForm action={createBorrower} title="Tambah Peminjam" />
+    </div>
+  );
 }

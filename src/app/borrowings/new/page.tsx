@@ -1,3 +1,5 @@
+// FlashMessage dipakai untuk menampilkan error simpan transaksi.
+import { FlashMessage } from "@/components/FlashMessage";
 // Form peminjaman menerima dropdown dan timetable.
 import { BorrowingForm } from "@/components/forms/BorrowingForm";
 // Action ini menyimpan peminjaman baru.
@@ -17,7 +19,7 @@ import { RoomService } from "@/services/RoomService";
 export const dynamic = "force-dynamic";
 
 // Halaman untuk membuat peminjaman baru.
-export default async function NewBorrowingPage() {
+export default async function NewBorrowingPage({ searchParams }: { searchParams?: { error?: string } }) {
   // Ambil akun yang sedang login.
   const account = await requireAccount();
   // Admin boleh memilih peminjam, user biasa tidak.
@@ -32,25 +34,30 @@ export default async function NewBorrowingPage() {
   const existingBookings = await new BorrowingService().findAll();
 
   return (
-    <BorrowingForm
-      action={createBorrowing}
-      borrowers={borrowers}
-      equipment={equipment}
-      // Ubah data peminjaman menjadi format sederhana untuk timetable.
-      existingBookings={existingBookings.map((booking) => ({
-        id: booking.id,
-        borrowerName: booking.borrower.name,
-        roomName: booking.room?.name ?? "-",
-        usageDate: booking.usageDate.toISOString(),
-        durationHours: booking.durationHours,
-        status: booking.status,
-        equipment: booking.equipmentItems.length
-          ? booking.equipmentItems.map((item) => `${item.equipment.name} x ${item.quantity}`).join(", ")
-          : "-"
-      }))}
-      // Jika bukan admin, peminjam dikunci ke akun login.
-      fixedBorrower={!isAdmin}
-      rooms={rooms}
-    />
+    <div className="stack">
+      {searchParams?.error === "save" ? (
+        <FlashMessage message="Peminjaman gagal disimpan. Periksa tanggal, durasi, stok, dan minimal pilih ruang atau peralatan." type="error" />
+      ) : null}
+      <BorrowingForm
+        action={createBorrowing}
+        borrowers={borrowers}
+        equipment={equipment}
+        // Ubah data peminjaman menjadi format sederhana untuk timetable.
+        existingBookings={existingBookings.map((booking) => ({
+          id: booking.id,
+          borrowerName: booking.borrower.name,
+          roomName: booking.room?.name ?? "-",
+          usageDate: booking.usageDate.toISOString(),
+          durationHours: booking.durationHours,
+          status: booking.status,
+          equipment: booking.equipmentItems.length
+            ? booking.equipmentItems.map((item) => `${item.equipment.name} x ${item.quantity}`).join(", ")
+            : "-"
+        }))}
+        // Jika bukan admin, peminjam dikunci ke akun login.
+        fixedBorrower={!isAdmin}
+        rooms={rooms}
+      />
+    </div>
   );
 }

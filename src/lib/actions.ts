@@ -72,102 +72,162 @@ export async function changePassword(formData: FormData) {
 export async function createBorrower(formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Kirim data form ke service untuk divalidasi dan disimpan.
-  await new BorrowerService().create(toObject(formData));
+  // Tangkap error agar halaman tidak berubah menjadi application error.
+  try {
+    // Kirim data form ke service untuk divalidasi dan disimpan.
+    await new BorrowerService().create(toObject(formData));
+  } catch {
+    // Kembali ke form jika data tidak valid atau username/email sudah dipakai.
+    redirect("/borrowers/new?error=save");
+  }
   // Refresh halaman daftar peminjam.
   revalidatePath("/borrowers");
   // Kembali ke daftar peminjam.
-  redirect("/borrowers");
+  redirect("/borrowers?success=created");
 }
 
 // Mengubah data peminjam berdasarkan id. Hanya admin yang boleh.
 export async function updateBorrower(id: string, formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi dan update data peminjam.
-  await new BorrowerService().update(id, toObject(formData));
+  // Tangkap error validasi atau duplikasi data.
+  try {
+    // Validasi dan update data peminjam.
+    await new BorrowerService().update(id, toObject(formData));
+  } catch {
+    // Kembali ke form edit jika update gagal.
+    redirect(`/borrowers/${id}/edit?error=save`);
+  }
   // Refresh halaman daftar peminjam.
   revalidatePath("/borrowers");
   // Kembali ke daftar peminjam.
-  redirect("/borrowers");
+  redirect("/borrowers?success=updated");
 }
 
 // Menghapus data peminjam. Hanya admin yang boleh.
 export async function deleteBorrower(id: string) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Hapus data peminjam berdasarkan id.
-  await new BorrowerService().delete(id);
+  // Tangkap error jika peminjam masih terhubung dengan transaksi.
+  try {
+    // Hapus data peminjam berdasarkan id.
+    await new BorrowerService().delete(id);
+  } catch {
+    // Kembali ke daftar dengan pesan gagal.
+    redirect("/borrowers?error=delete-used");
+  }
   // Refresh halaman daftar peminjam.
   revalidatePath("/borrowers");
+  // Kembali ke daftar dengan pesan sukses.
+  redirect("/borrowers?success=deleted");
 }
 
 // Membuat data ruang baru. Hanya admin yang boleh.
 export async function createRoom(formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi dan simpan data ruang.
-  await new RoomService().create(toObject(formData));
+  // Tangkap error validasi atau kode ruang duplikat.
+  try {
+    // Validasi dan simpan data ruang.
+    await new RoomService().create(toObject(formData));
+  } catch {
+    // Kembali ke form jika simpan gagal.
+    redirect("/rooms/new?error=save");
+  }
   // Refresh daftar ruang.
   revalidatePath("/rooms");
   // Kembali ke daftar ruang.
-  redirect("/rooms");
+  redirect("/rooms?success=created");
 }
 
 // Mengubah data ruang berdasarkan id. Hanya admin yang boleh.
 export async function updateRoom(id: string, formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi dan update data ruang.
-  await new RoomService().update(id, toObject(formData));
+  // Tangkap error validasi atau kode ruang duplikat.
+  try {
+    // Validasi dan update data ruang.
+    await new RoomService().update(id, toObject(formData));
+  } catch {
+    // Kembali ke form edit jika update gagal.
+    redirect(`/rooms/${id}/edit?error=save`);
+  }
   // Refresh daftar ruang.
   revalidatePath("/rooms");
   // Kembali ke daftar ruang.
-  redirect("/rooms");
+  redirect("/rooms?success=updated");
 }
 
 // Menghapus data ruang. Hanya admin yang boleh.
 export async function deleteRoom(id: string) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Hapus ruang berdasarkan id.
-  await new RoomService().delete(id);
+  // Tangkap error jika ruang sudah dipakai oleh peminjaman.
+  try {
+    // Hapus ruang berdasarkan id.
+    await new RoomService().delete(id);
+  } catch {
+    // Kembali ke daftar ruang dengan pesan gagal.
+    redirect("/rooms?error=delete-used");
+  }
   // Refresh daftar ruang.
   revalidatePath("/rooms");
+  // Kembali ke daftar ruang dengan pesan sukses.
+  redirect("/rooms?success=deleted");
 }
 
 // Membuat data peralatan baru. Hanya admin yang boleh.
 export async function createEquipment(formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi dan simpan data peralatan.
-  await new EquipmentService().create(toObject(formData));
+  // Tangkap error validasi atau kode barang duplikat.
+  try {
+    // Validasi dan simpan data peralatan.
+    await new EquipmentService().create(toObject(formData));
+  } catch {
+    // Kembali ke form jika simpan gagal.
+    redirect("/equipment/new?error=save");
+  }
   // Refresh daftar peralatan.
   revalidatePath("/equipment");
   // Kembali ke daftar peralatan.
-  redirect("/equipment");
+  redirect("/equipment?success=created");
 }
 
 // Mengubah data peralatan berdasarkan id. Hanya admin yang boleh.
 export async function updateEquipment(id: string, formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi dan update data peralatan.
-  await new EquipmentService().update(id, toObject(formData));
+  // Tangkap error validasi atau kode barang duplikat.
+  try {
+    // Validasi dan update data peralatan.
+    await new EquipmentService().update(id, toObject(formData));
+  } catch {
+    // Kembali ke form edit jika update gagal.
+    redirect(`/equipment/${id}/edit?error=save`);
+  }
   // Refresh daftar peralatan.
   revalidatePath("/equipment");
   // Kembali ke daftar peralatan.
-  redirect("/equipment");
+  redirect("/equipment?success=updated");
 }
 
 // Menghapus data peralatan. Hanya admin yang boleh.
 export async function deleteEquipment(id: string) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Hapus peralatan berdasarkan id.
-  await new EquipmentService().delete(id);
+  // Tangkap error jika peralatan sudah dipakai oleh peminjaman.
+  try {
+    // Hapus peralatan berdasarkan id.
+    await new EquipmentService().delete(id);
+  } catch {
+    // Kembali ke daftar peralatan dengan pesan gagal.
+    redirect("/equipment?error=delete-used");
+  }
   // Refresh daftar peralatan.
   revalidatePath("/equipment");
+  // Kembali ke daftar peralatan dengan pesan sukses.
+  redirect("/equipment?success=deleted");
 }
 
 // Membuat transaksi peminjaman ruang, barang, atau keduanya.
@@ -197,26 +257,38 @@ export async function createBorrowing(formData: FormData) {
     throw new Error("Akun ini belum terhubung dengan data peminjam");
   }
 
-  // Validasi dan simpan transaksi peminjaman lewat service.
-  await new BorrowingService().create({
-    ...formObject,
-    borrowerId,
-    equipmentItems
-  });
+  // Tangkap error validasi seperti tanggal, durasi, stok, atau pilihan kosong.
+  try {
+    // Validasi dan simpan transaksi peminjaman lewat service.
+    await new BorrowingService().create({
+      ...formObject,
+      borrowerId,
+      equipmentItems
+    });
+  } catch {
+    // Kembali ke form jika transaksi gagal disimpan.
+    redirect("/borrowings/new?error=save");
+  }
   // Refresh riwayat peminjaman setelah transaksi dibuat.
   revalidatePath("/borrowings");
   // Kembali ke halaman peminjaman.
-  redirect("/borrowings");
+  redirect("/borrowings?success=created");
 }
 
 // Mengubah status peminjaman. Hanya admin yang boleh.
 export async function updateBorrowingStatus(id: string, formData: FormData) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Validasi status dan simpan perubahan.
-  await new BorrowingService().updateStatus(id, toObject(formData));
+  // Tangkap error jika status/waktu pengembalian tidak valid.
+  try {
+    // Validasi status dan simpan perubahan.
+    await new BorrowingService().updateStatus(id, toObject(formData));
+  } catch {
+    // Kembali ke daftar peminjaman dengan pesan gagal.
+    redirect("/borrowings?error=status");
+  }
   // Refresh daftar peminjaman.
   revalidatePath("/borrowings");
   // Kembali ke halaman peminjaman.
-  redirect("/borrowings");
+  redirect("/borrowings?success=status");
 }

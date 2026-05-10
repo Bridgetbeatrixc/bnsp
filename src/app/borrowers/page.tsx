@@ -1,5 +1,7 @@
 // Link dipakai untuk tombol tambah dan edit.
 import Link from "next/link";
+// FlashMessage dipakai untuk menampilkan notifikasi sukses/gagal.
+import { FlashMessage } from "@/components/FlashMessage";
 // Action hapus peminjam dipasang pada form hapus.
 import { deleteBorrower } from "@/lib/actions";
 // Halaman peminjam hanya boleh dibuka admin.
@@ -11,11 +13,18 @@ import { BorrowerService } from "@/services/BorrowerService";
 export const dynamic = "force-dynamic";
 
 // Halaman daftar peminjam.
-export default async function BorrowersPage() {
+export default async function BorrowersPage({
+  searchParams
+}: {
+  searchParams?: { success?: string; error?: string };
+}) {
   // Pastikan user adalah admin.
   await requireAdmin();
   // Ambil semua data peminjam.
   const borrowers = await new BorrowerService().findAll();
+  // Ambil status query untuk menentukan notifikasi yang ditampilkan.
+  const success = searchParams?.success;
+  const error = searchParams?.error;
 
   return (
     <div className="stack">
@@ -28,6 +37,12 @@ export default async function BorrowersPage() {
           Tambah
         </Link>
       </div>
+      {success === "created" ? <FlashMessage message="Peminjam berhasil ditambahkan." type="success" /> : null}
+      {success === "updated" ? <FlashMessage message="Peminjam berhasil diubah." type="success" /> : null}
+      {success === "deleted" ? <FlashMessage message="Peminjam berhasil dihapus." type="success" /> : null}
+      {error === "delete-used" ? (
+        <FlashMessage message="Peminjam tidak bisa dihapus karena sudah memiliki akun atau data peminjaman." type="error" />
+      ) : null}
       <div className="table-wrap">
         <table>
           <thead>

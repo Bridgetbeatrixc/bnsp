@@ -70,7 +70,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <strong>{account.username}</strong>
                   <span>{account.role}</span>
                   {account.borrower ? <small>{account.borrower.name}</small> : <small>Administrator</small>}
-                  <Link className="account-link" href="/account/password">Ganti Password</Link>
+                  <Link
+                    className={isActiveLink(pathname, "/account/password") ? "account-link active" : "account-link"}
+                    href="/account/password"
+                  >
+                    Ganti Password
+                  </Link>
                 </div>
               ) : (
                 <div className="account-box">
@@ -80,11 +85,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               )}
               <nav className="nav">
                 {links.map(([href, label]) => (
-                  <Link className={isActiveLink(pathname, href) ? "active" : ""} href={href} key={href}>
+                  <Link
+                    aria-current={isActiveLink(pathname, href) ? "page" : undefined}
+                    className={isActiveLink(pathname, href) ? "active" : ""}
+                    href={href}
+                    key={href}
+                  >
                     {label}
                   </Link>
                 ))}
-                {!account ? <Link className={isActiveLink(pathname, "/login") ? "active" : ""} href="/login">Login</Link> : null}
+                {!account ? (
+                  <Link
+                    aria-current={isActiveLink(pathname, "/login") ? "page" : undefined}
+                    className={isActiveLink(pathname, "/login") ? "active" : ""}
+                    href="/login"
+                  >
+                    Login
+                  </Link>
+                ) : null}
               </nav>
               {account ? (
                 // Logout hanya muncul jika user sudah login.

@@ -1,5 +1,7 @@
 // Link dipakai untuk tombol tambah/ajukan peminjaman.
 import Link from "next/link";
+// FlashMessage dipakai untuk menampilkan notifikasi sukses/gagal.
+import { FlashMessage } from "@/components/FlashMessage";
 // Action update status hanya boleh dipakai admin.
 import { updateBorrowingStatus } from "@/lib/actions";
 // requireAccount memastikan user sudah login.
@@ -12,8 +14,26 @@ import { BorrowingService } from "@/services/BorrowingService";
 // Halaman ini dinamis karena membaca session dan database.
 export const dynamic = "force-dynamic";
 
+// Mengubah Date menjadi format yang cocok untuk input datetime-local.
+function formatDateTimeLocal(value: Date | null) {
+  // Jika belum ada waktu pengembalian, input dibiarkan kosong.
+  if (!value) {
+    return "";
+  }
+  // Buat Date dari nilai database.
+  const date = new Date(value);
+  // Helper kecil untuk angka dua digit.
+  const pad = (number: number) => String(number).padStart(2, "0");
+  // Ambil format yyyy-MM-ddTHH:mm sesuai waktu lokal browser/server.
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 // Halaman daftar peminjaman untuk admin atau riwayat pribadi untuk user.
-export default async function BorrowingsPage() {
+export default async function BorrowingsPage({
+  searchParams
+}: {
+  searchParams?: { success?: string; error?: string };
+}) {
   // Ambil akun login.
   const account = await requireAccount();
   // Tentukan apakah user admin.
@@ -32,6 +52,9 @@ export default async function BorrowingsPage() {
           orderBy: { createdAt: "desc" }
         })
       : [];
+  // Ambil status query untuk menentukan notifikasi yang ditampilkan.
+  const success = searchParams?.success;
+  const error = searchParams?.error;
 
   return (
     <div className="stack">
@@ -48,6 +71,11 @@ export default async function BorrowingsPage() {
           {isAdmin ? "Tambah" : "Ajukan Peminjaman"}
         </Link>
       </div>
+      {success === "created" ? <FlashMessage message="Peminjaman berhasil dibuat." type="success" /> : null}
+      {success === "status" ? <FlashMessage message="Status peminjaman berhasil diupdate." type="success" /> : null}
+      {error === "status" ? (
+        <FlashMessage message="Status gagal diupdate. Jika memilih selesai, waktu pengembalian wajib diisi." type="error" />
+      ) : null}
       <div className="table-wrap">
         <table>
           <thead>
@@ -86,7 +114,11 @@ export default async function BorrowingsPage() {
                         <option value="DITOLAK">Ditolak</option>
                         <option value="SELESAI">Selesai</option>
                       </select>
-                      <input name="actualReturnTime" type="datetime-local" />
+                      <input
+                        defaultValue={formatDateTimeLocal(borrowing.actualReturnTime)}
+                        name="actualReturnTime"
+                        type="datetime-local"
+                      />
                       <button type="submit">Simpan</button>
                     </form>
                   </td>

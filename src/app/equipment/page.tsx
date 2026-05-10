@@ -1,5 +1,7 @@
 // Link dipakai untuk tombol tambah dan edit.
 import Link from "next/link";
+// FlashMessage dipakai untuk menampilkan notifikasi sukses/gagal.
+import { FlashMessage } from "@/components/FlashMessage";
 // Action hapus peralatan dipasang pada form hapus.
 import { deleteEquipment } from "@/lib/actions";
 // Halaman peralatan hanya boleh dibuka admin.
@@ -11,11 +13,18 @@ import { EquipmentService } from "@/services/EquipmentService";
 export const dynamic = "force-dynamic";
 
 // Halaman daftar peralatan.
-export default async function EquipmentPage() {
+export default async function EquipmentPage({
+  searchParams
+}: {
+  searchParams?: { success?: string; error?: string };
+}) {
   // Pastikan user adalah admin.
   await requireAdmin();
   // Ambil semua data peralatan.
   const equipment = await new EquipmentService().findAll();
+  // Ambil status query untuk menentukan notifikasi yang ditampilkan.
+  const success = searchParams?.success;
+  const error = searchParams?.error;
 
   return (
     <div className="stack">
@@ -26,6 +35,12 @@ export default async function EquipmentPage() {
         </div>
         <Link className="button" href="/equipment/new">Tambah</Link>
       </div>
+      {success === "created" ? <FlashMessage message="Peralatan berhasil ditambahkan." type="success" /> : null}
+      {success === "updated" ? <FlashMessage message="Peralatan berhasil diubah." type="success" /> : null}
+      {success === "deleted" ? <FlashMessage message="Peralatan berhasil dihapus." type="success" /> : null}
+      {error === "delete-used" ? (
+        <FlashMessage message="Peralatan tidak bisa dihapus karena sudah dipakai pada data peminjaman." type="error" />
+      ) : null}
       <div className="table-wrap">
         <table>
           <thead><tr><th>Kode</th><th>Nama</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead>

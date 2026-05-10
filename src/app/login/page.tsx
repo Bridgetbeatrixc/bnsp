@@ -29,7 +29,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
           <input name="password" required type="password" />
         </label>
         {hasLoginError ? (
-          <p className="error-message">Username atau password salah. Coba gunakan akun demo di samping.</p>
+          <p className="error-message">Username atau password salah.</p>
         ) : null}
         <button type="submit">Login</button>
         {account ? (
@@ -37,44 +37,6 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
         ) : null}
       </form>
 
-      <section className="panel stack">
-        <div>
-          <h2>Demo Account</h2>
-          <p className="subtitle">Gunakan akun ini untuk melihat dashboard sesuai role.</p>
-        </div>
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Role</th>
-                <th>Username</th>
-                <th>Password</th>
-                <th>Dashboard</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span className="badge admin">ADMIN</span></td>
-                <td>admin</td>
-                <td>admin123</td>
-                <td>Semua data sistem</td>
-              </tr>
-              <tr>
-                <td><span className="badge student">MAHASISWA</span></td>
-                <td>alya</td>
-                <td>mahasiswa123</td>
-                <td>Data dan peminjaman Alya</td>
-              </tr>
-              <tr>
-                <td><span className="badge lecturer">DOSEN</span></td>
-                <td>bima</td>
-                <td>dosen123</td>
-                <td>Data dan peminjaman Dr. Bima</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
   );
 }
