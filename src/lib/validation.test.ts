@@ -162,6 +162,8 @@ describe("critical input validation", () => {
     expect(() =>
       statusUpdateSchema.parse({
         status: "SELESAI",
+        usageDate: "2026-05-10T09:00",
+        durationHours: 2,
         actualReturnTime: ""
       })
     ).toThrow();
@@ -171,6 +173,8 @@ describe("critical input validation", () => {
     expect(() =>
       statusUpdateSchema.parse({
         status: "SELESAI",
+        usageDate: "2026-05-10T09:00",
+        durationHours: 2,
         actualReturnTime: "2026-05-10T12:00"
       })
     ).not.toThrow();
@@ -180,9 +184,22 @@ describe("critical input validation", () => {
     expect(() =>
       statusUpdateSchema.parse({
         status: "DISETUJUI",
+        usageDate: "2026-05-10T09:00",
+        durationHours: 2,
         actualReturnTime: ""
       })
     ).not.toThrow();
+  });
+
+  it("rejects status update with zero duration", () => {
+    expect(() =>
+      statusUpdateSchema.parse({
+        status: "MENUNGGU",
+        usageDate: "2026-05-10T09:00",
+        durationHours: 0,
+        actualReturnTime: ""
+      })
+    ).toThrow();
   });
 
   it("hashes password without storing the plain text", () => {

@@ -81,6 +81,10 @@ export const borrowingSchema = z.object({
 export const statusUpdateSchema = z
   .object({
     status: borrowingStatusSchema,
+    // Admin boleh memperbaiki tanggal dan jam pakai dari halaman peminjaman.
+    usageDate: dateInput,
+    // Durasi ikut diedit agar jadwal selesai dapat dihitung ulang.
+    durationHours: positiveInteger,
     // String kosong dari input datetime dianggap tidak diisi.
     actualReturnTime: z.preprocess(
       (value) => (value === "" ? undefined : value),

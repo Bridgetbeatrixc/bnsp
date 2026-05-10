@@ -338,6 +338,8 @@ describe("BorrowingService transaction flow", () => {
 
     await new BorrowingService().updateStatus("borrowing-1", {
       status: "SELESAI",
+      usageDate: "2026-05-10T09:00",
+      durationHours: 3,
       actualReturnTime: "2026-05-10T12:00"
     });
 
@@ -345,6 +347,8 @@ describe("BorrowingService transaction flow", () => {
       where: { id: "borrowing-1" },
       data: {
         status: "SELESAI",
+        usageDate: new Date("2026-05-10T09:00"),
+        durationHours: 3,
         actualReturnTime: new Date("2026-05-10T12:00")
       }
     });

@@ -30,6 +30,32 @@ function formatDateTimeLocal(value: Date | null) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
+// Menampilkan tanggal pakai dengan format yang mudah dibaca.
+function formatScheduleDate(value: Date) {
+  // Intl dipakai agar tanggal tampil alami untuk user Indonesia.
+  return new Intl.DateTimeFormat("id-ID", {
+    dateStyle: "medium"
+  }).format(value);
+}
+
+// Menampilkan rentang jam pakai dari jam mulai sampai jam selesai.
+function formatScheduleTime(value: Date, durationHours: number) {
+  // Jam selesai dihitung dari jam mulai ditambah durasi.
+  const endDate = new Date(value.getTime() + durationHours * 60 * 60 * 1000);
+  // Format jam dibuat dua digit agar rapi di tabel.
+  const formatter = new Intl.DateTimeFormat("id-ID", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  });
+  // Jika melewati hari berbeda, tampilkan tanggal selesai juga.
+  if (value.toDateString() !== endDate.toDateString()) {
+    return `${formatter.format(value)} - ${formatScheduleDate(endDate)} ${formatter.format(endDate)}`;
+  }
+  // Jika masih hari yang sama, cukup tampilkan rentang jam.
+  return `${formatter.format(value)} - ${formatter.format(endDate)}`;
+}
+
 // Halaman daftar peminjaman untuk admin atau riwayat pribadi untuk user.
 export default async function BorrowingsPage({
   searchParams
@@ -97,9 +123,9 @@ export default async function BorrowingsPage({
                 <td>{borrowing.borrower.name}</td>
                 <td>{borrowing.room?.name ?? "-"}</td>
                 <td>
-                  {borrowing.usageDate.toISOString().slice(0, 10)}
-                  <br />
-                  {borrowing.durationHours} jam
+                  <div className="font-semibold">{formatScheduleDate(borrowing.usageDate)}</div>
+                  <div>{formatScheduleTime(borrowing.usageDate, borrowing.durationHours)}</div>
+                  <div className="text-sm text-app-muted">{borrowing.durationHours} jam</div>
                 </td>
                 <td>{borrowing.purpose}</td>
                 <td>
@@ -118,11 +144,33 @@ export default async function BorrowingsPage({
                         <option value="DITOLAK">Ditolak</option>
                         <option value="SELESAI">Selesai</option>
                       </select>
-                      <input
-                        defaultValue={formatDateTimeLocal(borrowing.actualReturnTime)}
-                        name="actualReturnTime"
-                        type="datetime-local"
-                      />
+                      <label>
+                        Tanggal dan Jam Pakai
+                        <input
+                          defaultValue={formatDateTimeLocal(borrowing.usageDate)}
+                          name="usageDate"
+                          type="datetime-local"
+                          required
+                        />
+                      </label>
+                      <label>
+                        Durasi Jam
+                        <input
+                          defaultValue={borrowing.durationHours}
+                          min="1"
+                          name="durationHours"
+                          type="number"
+                          required
+                        />
+                      </label>
+                      <label>
+                        Waktu Pengembalian Aktual
+                        <input
+                          defaultValue={formatDateTimeLocal(borrowing.actualReturnTime)}
+                          name="actualReturnTime"
+                          type="datetime-local"
+                        />
+                      </label>
                       <button className={ui.button} type="submit">Simpan</button>
                     </form>
                   </td>

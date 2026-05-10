@@ -68,6 +68,10 @@ export class BorrowingService {
       where: { id },
       data: {
         status: data.status,
+        // Tanggal dan jam pakai bisa diperbaiki admin dari tabel peminjaman.
+        usageDate: data.usageDate,
+        // Durasi juga disimpan ulang agar jadwal tampil sesuai edit terbaru.
+        durationHours: data.durationHours,
         // Jika kosong, simpan null agar database bersih.
         actualReturnTime: data.actualReturnTime ?? null
       }
