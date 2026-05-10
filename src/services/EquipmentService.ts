@@ -7,12 +7,20 @@ import { equipmentSchema } from "@/lib/validation";
 export class EquipmentService {
   // Mengambil semua peralatan terbaru.
   findAll() {
-    return prisma.equipment.findMany({ orderBy: { createdAt: "desc" } });
+    return prisma.equipment.findMany({
+      where: { deletedAt: null },
+      orderBy: { createdAt: "desc" }
+    });
   }
 
   // Mengambil satu peralatan berdasarkan id.
   findById(id: string) {
-    return prisma.equipment.findUniqueOrThrow({ where: { id } });
+    return prisma.equipment.findFirstOrThrow({
+      where: {
+        id,
+        deletedAt: null
+      }
+    });
   }
 
   // Membuat peralatan baru setelah validasi.
@@ -24,11 +32,17 @@ export class EquipmentService {
   // Mengubah peralatan berdasarkan id setelah validasi.
   update(id: string, input: unknown) {
     const data = equipmentSchema.parse(input);
-    return prisma.equipment.update({ where: { id }, data });
+    return prisma.equipment.update({
+      where: { id },
+      data
+    });
   }
 
-  // Menghapus peralatan berdasarkan id.
+  // Menghapus peralatan secara soft delete agar riwayat peminjaman tetap aman.
   delete(id: string) {
-    return prisma.equipment.delete({ where: { id } });
+    return prisma.equipment.update({
+      where: { id },
+      data: { deletedAt: new Date() }
+    });
   }
 }

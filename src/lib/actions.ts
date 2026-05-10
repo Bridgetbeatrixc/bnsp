@@ -230,16 +230,16 @@ export async function updateEquipment(id: string, formData: FormData) {
   redirect("/equipment?success=updated");
 }
 
-// Menghapus data peralatan. Hanya admin yang boleh.
+// Menghapus data peralatan dari daftar aktif. Hanya admin yang boleh.
 export async function deleteEquipment(id: string) {
   // Pastikan role user adalah ADMIN.
   await requireAdmin();
-  // Tangkap error jika peralatan sudah dipakai oleh peminjaman.
+  // Tangkap error jika data tidak ditemukan atau database gagal update.
   try {
-    // Hapus peralatan berdasarkan id.
+    // Soft delete peralatan agar riwayat peminjaman tetap punya nama barang.
     await new EquipmentService().delete(id);
   } catch {
-    // Kembali ke daftar peralatan dengan pesan gagal.
+    // Kembali ke daftar peralatan dengan pesan gagal umum.
     redirect("/equipment?error=delete-used");
   }
   // Refresh daftar peralatan.

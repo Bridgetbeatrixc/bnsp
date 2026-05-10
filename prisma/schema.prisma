@@ -73,6 +73,7 @@ model Equipment {
   name               String
   stock              Int
   category           String
+  deletedAt          DateTime?
   borrowingEquipment BorrowingEquipment[]
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt

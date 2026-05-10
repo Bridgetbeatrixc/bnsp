@@ -27,7 +27,10 @@ export class BorrowingService {
     const data = borrowingSchema.parse(input);
     // Ambil data stok untuk semua barang yang dipilih.
     const equipment = await prisma.equipment.findMany({
-      where: { id: { in: data.equipmentItems.map((item) => item.equipmentId) } }
+      where: {
+        id: { in: data.equipmentItems.map((item) => item.equipmentId) },
+        deletedAt: null
+      }
     });
     // Pastikan jumlah pinjam tidak melebihi stok.
     validateEquipmentStock(

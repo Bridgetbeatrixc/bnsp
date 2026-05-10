@@ -37,10 +37,10 @@ export default async function EquipmentPage({
       </div>
       {success === "created" ? <FlashMessage message="Peralatan berhasil ditambahkan." type="success" /> : null}
       {success === "updated" ? <FlashMessage message="Peralatan berhasil diubah." type="success" /> : null}
-      {success === "deleted" ? <FlashMessage message="Peralatan berhasil dihapus." type="success" /> : null}
-      {error === "delete-used" ? (
-        <FlashMessage message="Peralatan tidak bisa dihapus karena sudah dipakai pada data peminjaman." type="error" />
+      {success === "deleted" ? (
+        <FlashMessage message="Peralatan berhasil dihapus dari daftar aktif. Riwayat peminjaman lama tetap tersimpan." type="success" />
       ) : null}
+      {error === "delete-used" ? <FlashMessage message="Peralatan gagal dihapus." type="error" /> : null}
       <div className="table-wrap">
         <table>
           <thead><tr><th>Kode</th><th>Nama</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead>
