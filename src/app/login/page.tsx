@@ -2,6 +2,8 @@
 import { login } from "@/lib/actions";
 // Helper auth dipakai untuk menampilkan akun jika sudah login.
 import { getCurrentAccount } from "@/lib/auth";
+// Link dipakai untuk membuka halaman lupa password.
+import Link from "next/link";
 
 // Login dinamis karena membaca cookie session.
 export const dynamic = "force-dynamic";
@@ -35,6 +37,7 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
         {account ? (
           <p className="subtitle">Sedang login sebagai {account.username} ({account.role}).</p>
         ) : null}
+        <Link className="text-link" href="/forgot-password">Lupa password?</Link>
       </form>
 
     </div>

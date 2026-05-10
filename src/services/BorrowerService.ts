@@ -67,4 +67,31 @@ export class BorrowerService {
   delete(id: string) {
     return prisma.borrower.delete({ where: { id } });
   }
+
+  // Reset password akun peminjam kembali ke NIM/NIK.
+  async resetPassword(id: string) {
+    // Ambil peminjam beserta akun login yang terhubung.
+    const borrower = await prisma.borrower.findUniqueOrThrow({
+      where: { id },
+      include: { account: true }
+    });
+
+    // Jika peminjam belum punya akun, buat akun baru dari email dan NIM/NIK.
+    if (!borrower.account) {
+      return prisma.account.create({
+        data: {
+          username: borrower.email ?? borrower.identityNumber,
+          passwordHash: hashPassword(borrower.identityNumber),
+          role: borrower.accountType,
+          borrowerId: borrower.id
+        }
+      });
+    }
+
+    // Jika akun sudah ada, update password menjadi hash dari NIM/NIK.
+    return prisma.account.update({
+      where: { id: borrower.account.id },
+      data: { passwordHash: hashPassword(borrower.identityNumber) }
+    });
+  }
 }

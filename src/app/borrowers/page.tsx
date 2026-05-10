@@ -2,8 +2,8 @@
 import Link from "next/link";
 // FlashMessage dipakai untuk menampilkan notifikasi sukses/gagal.
 import { FlashMessage } from "@/components/FlashMessage";
-// Action hapus peminjam dipasang pada form hapus.
-import { deleteBorrower } from "@/lib/actions";
+// Action hapus dan reset password peminjam dipasang pada form admin.
+import { deleteBorrower, resetBorrowerPassword } from "@/lib/actions";
 // Halaman peminjam hanya boleh dibuka admin.
 import { requireAdmin } from "@/lib/auth";
 // Service peminjam mengambil data dari database.
@@ -40,9 +40,11 @@ export default async function BorrowersPage({
       {success === "created" ? <FlashMessage message="Peminjam berhasil ditambahkan." type="success" /> : null}
       {success === "updated" ? <FlashMessage message="Peminjam berhasil diubah." type="success" /> : null}
       {success === "deleted" ? <FlashMessage message="Peminjam berhasil dihapus." type="success" /> : null}
+      {success === "reset" ? <FlashMessage message="Password peminjam berhasil direset ke NIM/NIK." type="success" /> : null}
       {error === "delete-used" ? (
         <FlashMessage message="Peminjam tidak bisa dihapus karena sudah memiliki akun atau data peminjaman." type="error" />
       ) : null}
+      {error === "reset" ? <FlashMessage message="Password peminjam gagal direset." type="error" /> : null}
       <div className="table-wrap">
         <table>
           <thead>
@@ -72,6 +74,9 @@ export default async function BorrowersPage({
                   <Link className="button ghost" href={`/borrowers/${borrower.id}/edit`}>
                     Ubah
                   </Link>
+                  <form action={resetBorrowerPassword.bind(null, borrower.id)}>
+                    <button className="ghost" type="submit">Reset Password</button>
+                  </form>
                   <form action={deleteBorrower.bind(null, borrower.id)}>
                     <button className="danger" type="submit">Hapus</button>
                   </form>

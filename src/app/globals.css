@@ -282,6 +282,16 @@ button:hover {
   background: var(--primary-dark);
 }
 
+.text-link {
+  color: var(--primary);
+  font-weight: 700;
+  text-align: center;
+}
+
+.auth-page .text-link {
+  color: white;
+}
+
 .ghost {
   background: #e8eef3;
   color: var(--text);

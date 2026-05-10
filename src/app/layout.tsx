@@ -51,7 +51,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   // Baca pathname agar halaman login bisa memakai layout berbeda.
   const pathname = headers().get("x-pathname") ?? "";
   // Login page dibuat terpisah dari dashboard shell.
-  const isLoginPage = pathname === "/login";
+  const isLoginPage = pathname === "/login" || pathname === "/forgot-password";
   // Pilih menu berdasarkan role akun.
   const links = account?.role === "ADMIN" ? adminLinks : userLinks;
 

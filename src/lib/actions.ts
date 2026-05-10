@@ -122,6 +122,24 @@ export async function deleteBorrower(id: string) {
   redirect("/borrowers?success=deleted");
 }
 
+// Reset password peminjam kembali ke NIM/NIK. Hanya admin yang boleh.
+export async function resetBorrowerPassword(id: string) {
+  // Pastikan role user adalah ADMIN.
+  await requireAdmin();
+  // Tangkap error jika peminjam atau akun tidak bisa diproses.
+  try {
+    // Reset password lewat service peminjam.
+    await new BorrowerService().resetPassword(id);
+  } catch {
+    // Kembali ke daftar dengan pesan gagal.
+    redirect("/borrowers?error=reset");
+  }
+  // Refresh daftar peminjam setelah reset.
+  revalidatePath("/borrowers");
+  // Kembali ke daftar dengan pesan sukses.
+  redirect("/borrowers?success=reset");
+}
+
 // Membuat data ruang baru. Hanya admin yang boleh.
 export async function createRoom(formData: FormData) {
   // Pastikan role user adalah ADMIN.
