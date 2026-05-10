@@ -10,6 +10,8 @@ import { requireAccount } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 // Service peminjaman mengambil semua transaksi untuk admin.
 import { BorrowingService } from "@/services/BorrowingService";
+// Utility Tailwind bersama untuk layout, tabel, form kecil, dan tombol.
+import { cx, ui } from "@/lib/ui";
 
 // Halaman ini dinamis karena membaca session dan database.
 export const dynamic = "force-dynamic";
@@ -57,17 +59,17 @@ export default async function BorrowingsPage({
   const error = searchParams?.error;
 
   return (
-    <div className="stack">
-      <div className="topbar">
+    <div className={ui.stack}>
+      <div className={ui.topbar}>
         <div>
-          <h1 className="title">{isAdmin ? "Pencatatan Peminjaman" : "Riwayat Peminjaman Saya"}</h1>
-          <p className="subtitle">
+          <h1 className={ui.title}>{isAdmin ? "Pencatatan Peminjaman" : "Riwayat Peminjaman Saya"}</h1>
+          <p className={ui.subtitle}>
             {isAdmin
               ? "Admin dapat melihat seluruh transaksi dan memperbarui status."
               : "Mahasiswa dan dosen hanya dapat melihat status pengajuan sendiri."}
           </p>
         </div>
-        <Link className="button" href="/borrowings/new">
+        <Link className={ui.button} href="/borrowings/new">
           {isAdmin ? "Tambah" : "Ajukan Peminjaman"}
         </Link>
       </div>
@@ -76,7 +78,7 @@ export default async function BorrowingsPage({
       {error === "status" ? (
         <FlashMessage message="Status gagal diupdate. Jika memilih selesai, waktu pengembalian wajib diisi." type="error" />
       ) : null}
-      <div className="table-wrap">
+      <div className={ui.tableWrap}>
         <table>
           <thead>
             <tr>
@@ -105,11 +107,11 @@ export default async function BorrowingsPage({
                     <div key={item.id}>{item.equipment.name} x {item.quantity}</div>
                   ))}
                 </td>
-                <td><span className="badge">{borrowing.status}</span></td>
+                <td><span className={ui.badge}>{borrowing.status}</span></td>
                 {isAdmin ? (
                   // Form update status hanya dirender untuk admin.
                   <td>
-                    <form action={updateBorrowingStatus.bind(null, borrowing.id)} className="actions">
+                    <form action={updateBorrowingStatus.bind(null, borrowing.id)} className={cx(ui.actions, ui.formControls)}>
                       <select name="status" defaultValue={borrowing.status}>
                         <option value="MENUNGGU">Menunggu</option>
                         <option value="DISETUJUI">Disetujui</option>
@@ -121,7 +123,7 @@ export default async function BorrowingsPage({
                         name="actualReturnTime"
                         type="datetime-local"
                       />
-                      <button type="submit">Simpan</button>
+                      <button className={ui.button} type="submit">Simpan</button>
                     </form>
                   </td>
                 ) : null}

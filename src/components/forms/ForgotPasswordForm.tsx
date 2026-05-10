@@ -4,6 +4,8 @@
 import type { FormEvent } from "react";
 // useState dipakai untuk menyimpan input user sebelum dibuat email.
 import { useState } from "react";
+// Utility Tailwind bersama untuk form dan tombol.
+import { cx, ui } from "@/lib/ui";
 
 // Email admin tujuan permintaan reset password.
 const adminEmail = "admin@universitasxyz.ac.id";
@@ -32,10 +34,10 @@ export function ForgotPasswordForm() {
   }
 
   return (
-    <form className="panel stack" onSubmit={handleSubmit}>
+    <form className={cx(ui.panel, ui.stack, ui.formControls, "shadow-authPanel")} onSubmit={handleSubmit}>
       <div>
-        <h1 className="title">Lupa Password</h1>
-        <p className="subtitle">Kirim permintaan ke admin agar password akun direset.</p>
+        <h1 className={ui.title}>Lupa Password</h1>
+        <p className={ui.subtitle}>Kirim permintaan ke admin agar password akun direset.</p>
       </div>
       <label>
         Nama
@@ -49,8 +51,8 @@ export function ForgotPasswordForm() {
         Email / Username
         <input onChange={(event) => setEmail(event.target.value)} required type="email" value={email} />
       </label>
-      <p className="subtitle">Admin akan mereset password dan memberi password awal kembali.</p>
-      <button type="submit">Kirim ke Admin</button>
+      <p className={ui.subtitle}>Admin akan mereset password dan memberi password awal kembali.</p>
+      <button className={ui.button} type="submit">Kirim ke Admin</button>
     </form>
   );
 }

@@ -4,6 +4,8 @@ import { login } from "@/lib/actions";
 import { getCurrentAccount } from "@/lib/auth";
 // Link dipakai untuk membuka halaman lupa password.
 import Link from "next/link";
+// Utility Tailwind bersama untuk form login.
+import { cx, ui } from "@/lib/ui";
 
 // Login dinamis karena membaca cookie session.
 export const dynamic = "force-dynamic";
@@ -16,11 +18,11 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
   const hasLoginError = searchParams?.error === "invalid";
 
   return (
-    <div className="login-shell">
-      <form action={login} className="panel stack">
+    <div className={ui.loginShell}>
+      <form action={login} className={cx(ui.panel, ui.stack, ui.formControls, "shadow-authPanel")}>
         <div>
-          <h1 className="title">Login Akun</h1>
-          <p className="subtitle">Masuk sebagai admin, mahasiswa, atau dosen. Akun baru memakai email sebagai username.</p>
+          <h1 className={ui.title}>Login Akun</h1>
+          <p className={ui.subtitle}>Masuk sebagai admin, mahasiswa, atau dosen. Akun baru memakai email sebagai username.</p>
         </div>
         <label>
           Username / Email
@@ -31,13 +33,13 @@ export default async function LoginPage({ searchParams }: { searchParams?: { err
           <input name="password" required type="password" />
         </label>
         {hasLoginError ? (
-          <p className="error-message">Username atau password salah.</p>
+          <p className={ui.errorMessage}>Username atau password salah.</p>
         ) : null}
-        <button type="submit">Login</button>
+        <button className={ui.button} type="submit">Login</button>
         {account ? (
-          <p className="subtitle">Sedang login sebagai {account.username} ({account.role}).</p>
+          <p className={ui.subtitle}>Sedang login sebagai {account.username} ({account.role}).</p>
         ) : null}
-        <Link className="text-link" href="/forgot-password">Lupa password?</Link>
+        <Link className={ui.textLinkLight} href="/forgot-password">Lupa password?</Link>
       </form>
 
     </div>

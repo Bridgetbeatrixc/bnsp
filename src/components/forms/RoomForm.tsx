@@ -2,6 +2,8 @@
 
 // Link dipakai untuk tombol batal kembali ke daftar ruang.
 import Link from "next/link";
+// Utility Tailwind bersama untuk form dan tombol.
+import { cx, ui } from "@/lib/ui";
 // Tipe event React dipakai untuk validasi input angka di browser.
 import type { ClipboardEvent, KeyboardEvent } from "react";
 
@@ -40,12 +42,12 @@ type RoomFormProps = {
 // Form ruang untuk kapasitas, gedung, lantai, dan status.
 export function RoomForm({ title, room, action }: RoomFormProps) {
   return (
-    <form action={action} className="panel stack">
+    <form action={action} className={cx(ui.panel, ui.stack, ui.formControls)}>
       <div>
-        <h1 className="title">{title}</h1>
-        <p className="subtitle">Data ruang digunakan saat transaksi peminjaman dibuat.</p>
+        <h1 className={ui.title}>{title}</h1>
+        <p className={ui.subtitle}>Data ruang digunakan saat transaksi peminjaman dibuat.</p>
       </div>
-      <div className="form-grid">
+      <div className={ui.formGrid}>
         <label>Kode<input name="code" defaultValue={room?.code} required /></label>
         <label>Nama<input name="name" defaultValue={room?.name} required /></label>
         <label>Kapasitas
@@ -82,9 +84,9 @@ export function RoomForm({ title, room, action }: RoomFormProps) {
           </select>
         </label>
       </div>
-      <div className="actions">
-        <button type="submit">Simpan</button>
-        <Link className="button ghost" href="/rooms">Batal</Link>
+      <div className={ui.actions}>
+        <button className={ui.button} type="submit">Simpan</button>
+        <Link className={ui.ghostButton} href="/rooms">Batal</Link>
       </div>
     </form>
   );

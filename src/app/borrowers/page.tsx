@@ -8,6 +8,8 @@ import { deleteBorrower, resetBorrowerPassword } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 // Service peminjam mengambil data dari database.
 import { BorrowerService } from "@/services/BorrowerService";
+// Utility Tailwind bersama untuk layout, tabel, dan tombol.
+import { ui } from "@/lib/ui";
 
 // Halaman ini dinamis karena membaca database dan session.
 export const dynamic = "force-dynamic";
@@ -27,13 +29,13 @@ export default async function BorrowersPage({
   const error = searchParams?.error;
 
   return (
-    <div className="stack">
-      <div className="topbar">
+    <div className={ui.stack}>
+      <div className={ui.topbar}>
         <div>
-          <h1 className="title">Manajemen Peminjam</h1>
-          <p className="subtitle">Kelola mahasiswa dan dosen yang mengajukan peminjaman.</p>
+          <h1 className={ui.title}>Manajemen Peminjam</h1>
+          <p className={ui.subtitle}>Kelola mahasiswa dan dosen yang mengajukan peminjaman.</p>
         </div>
-        <Link className="button" href="/borrowers/new">
+        <Link className={ui.button} href="/borrowers/new">
           Tambah
         </Link>
       </div>
@@ -45,7 +47,7 @@ export default async function BorrowersPage({
         <FlashMessage message="Peminjam tidak bisa dihapus karena sudah memiliki akun atau data peminjaman." type="error" />
       ) : null}
       {error === "reset" ? <FlashMessage message="Password peminjam gagal direset." type="error" /> : null}
-      <div className="table-wrap">
+      <div className={ui.tableWrap}>
         <table>
           <thead>
             <tr>
@@ -65,20 +67,20 @@ export default async function BorrowersPage({
                 <td>{borrower.identityNumber}</td>
                 <td>{borrower.email}</td>
                 <td>{borrower.phone}</td>
-                <td><span className="badge">{borrower.accountType}</span></td>
+                <td><span className={ui.badge}>{borrower.accountType}</span></td>
                 <td>
                   <div>{borrower.account?.username ?? borrower.email}</div>
                   <small>Password awal: {borrower.identityNumber}</small>
                 </td>
-                <td className="actions">
-                  <Link className="button ghost" href={`/borrowers/${borrower.id}/edit`}>
+                <td className={ui.actions}>
+                  <Link className={ui.ghostButton} href={`/borrowers/${borrower.id}/edit`}>
                     Ubah
                   </Link>
                   <form action={resetBorrowerPassword.bind(null, borrower.id)}>
-                    <button className="ghost" type="submit">Reset Password</button>
+                    <button className={ui.ghostButton} type="submit">Reset Password</button>
                   </form>
                   <form action={deleteBorrower.bind(null, borrower.id)}>
-                    <button className="danger" type="submit">Hapus</button>
+                    <button className={ui.dangerButton} type="submit">Hapus</button>
                   </form>
                 </td>
               </tr>

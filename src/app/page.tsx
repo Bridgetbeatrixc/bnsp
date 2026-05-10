@@ -4,6 +4,8 @@ import Link from "next/link";
 import { requireAccount } from "@/lib/auth";
 // Prisma dipakai untuk mengambil data dashboard.
 import { prisma } from "@/lib/prisma";
+// Utility Tailwind bersama untuk dashboard, tabel, dan tombol.
+import { cx, ui } from "@/lib/ui";
 
 // Dashboard selalu dinamis karena membaca session dan database.
 export const dynamic = "force-dynamic";
@@ -28,35 +30,35 @@ export default async function DashboardPage() {
       : [];
 
     return (
-      <div className="stack">
-        <div className="topbar">
+      <div className={ui.stack}>
+        <div className={ui.topbar}>
           <div>
-            <h1 className="title">Dashboard {account.role}</h1>
-            <p className="subtitle">Ringkasan akun dan riwayat peminjaman pribadi.</p>
+            <h1 className={ui.title}>Dashboard {account.role}</h1>
+            <p className={ui.subtitle}>Ringkasan akun dan riwayat peminjaman pribadi.</p>
           </div>
-          <span className={account.role === "DOSEN" ? "badge lecturer" : "badge student"}>
+          <span className={account.role === "DOSEN" ? ui.badgeLecturer : ui.badgeStudent}>
             {account.role}
           </span>
         </div>
 
-        <section className="grid">
-          <div className="card">
+        <section className={ui.grid}>
+          <div className={ui.card}>
             <span>Nama</span>
-            <div className="metric" style={{ fontSize: 24 }}>{account.borrower?.name}</div>
+            <div className={ui.metricSmall}>{account.borrower?.name}</div>
           </div>
-          <div className="card">
+          <div className={ui.card}>
             <span>NIM/NIK</span>
-            <div className="metric" style={{ fontSize: 24 }}>{account.borrower?.identityNumber}</div>
+            <div className={ui.metricSmall}>{account.borrower?.identityNumber}</div>
           </div>
-          <div className="card">
+          <div className={ui.card}>
             <span>Total Peminjaman</span>
-            <div className="metric">{borrowings.length}</div>
+            <div className={ui.metric}>{borrowings.length}</div>
           </div>
         </section>
 
-        <section className="panel">
+        <section className={ui.panel}>
           <h2>Riwayat Peminjaman Saya</h2>
-          <div className="table-wrap">
+          <div className={ui.tableWrap}>
             <table>
               <thead>
                 <tr>
@@ -78,14 +80,14 @@ export default async function DashboardPage() {
                         <div key={item.id}>{item.equipment.name} x {item.quantity}</div>
                       ))}
                     </td>
-                    <td><span className="badge">{borrowing.status}</span></td>
+                    <td><span className={ui.badge}>{borrowing.status}</span></td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="actions">
-            <Link className="button" href="/borrowings/new">Ajukan Peminjaman</Link>
+          <div className={ui.actions}>
+            <Link className={ui.button} href="/borrowings/new">Ajukan Peminjaman</Link>
           </div>
         </section>
       </div>
@@ -115,43 +117,43 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <div className="topbar">
+      <div className={ui.topbar}>
         <div>
-          <h1 className="title">Dashboard</h1>
-          <p className="subtitle">Ringkasan admin sistem peminjaman ruang dan peralatan.</p>
+          <h1 className={ui.title}>Dashboard</h1>
+          <p className={ui.subtitle}>Ringkasan admin sistem peminjaman ruang dan peralatan.</p>
         </div>
-        <span className="badge admin">ADMIN</span>
+        <span className={ui.badgeAdmin}>ADMIN</span>
       </div>
-      <section className="grid">
-        <div className="card">
+      <section className={ui.grid}>
+        <div className={ui.card}>
           <span>Peminjam</span>
-          <div className="metric">{borrowers}</div>
+          <div className={ui.metric}>{borrowers}</div>
         </div>
-        <div className="card">
+        <div className={ui.card}>
           <span>Akun Mahasiswa</span>
-          <div className="metric">{studentBorrowers}</div>
+          <div className={ui.metric}>{studentBorrowers}</div>
         </div>
-        <div className="card">
+        <div className={ui.card}>
           <span>Akun Dosen</span>
-          <div className="metric">{lecturerBorrowers}</div>
+          <div className={ui.metric}>{lecturerBorrowers}</div>
         </div>
-        <div className="card">
+        <div className={ui.card}>
           <span>Ruang</span>
-          <div className="metric">{rooms}</div>
+          <div className={ui.metric}>{rooms}</div>
         </div>
-        <div className="card">
+        <div className={ui.card}>
           <span>Peralatan</span>
-          <div className="metric">{equipment}</div>
+          <div className={ui.metric}>{equipment}</div>
         </div>
-        <div className="card">
+        <div className={ui.card}>
           <span>Peminjaman</span>
-          <div className="metric">{borrowings}</div>
+          <div className={ui.metric}>{borrowings}</div>
         </div>
       </section>
-      <section className="panel" style={{ marginTop: 18 }}>
+      <section className={cx(ui.panel, "mt-[18px]")}>
         <h2>Jenis Akun Peminjam</h2>
-        <p className="subtitle">Daftar ini menunjukkan akun mana yang mahasiswa dan mana yang dosen.</p>
-        <div className="table-wrap">
+        <p className={ui.subtitle}>Daftar ini menunjukkan akun mana yang mahasiswa dan mana yang dosen.</p>
+        <div className={ui.tableWrap}>
           <table>
             <thead>
               <tr>
@@ -167,7 +169,7 @@ export default async function DashboardPage() {
                   <td>{borrower.name}</td>
                   <td>{borrower.identityNumber}</td>
                   <td>{borrower.phone}</td>
-                  <td><span className="badge">{borrower.accountType}</span></td>
+                  <td><span className={ui.badge}>{borrower.accountType}</span></td>
                 </tr>
               ))}
             </tbody>

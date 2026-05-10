@@ -6,6 +6,8 @@ import Link from "next/link";
 import type { ClipboardEvent, KeyboardEvent } from "react";
 // useState dipakai untuk menambah/menghapus baris peralatan secara dinamis.
 import { useState } from "react";
+// Utility Tailwind bersama untuk layout, form, tabel, dan tombol.
+import { cx, ui } from "@/lib/ui";
 
 // Lookup sederhana untuk dropdown peminjam dan ruang.
 type Lookup = { id: string; name: string };
@@ -93,12 +95,12 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
   };
 
   return (
-    <form action={action} className="panel stack">
+    <form action={action} className={cx(ui.panel, ui.stack, ui.formControls)}>
       <div>
-        <h1 className="title">Tambah Peminjaman</h1>
-        <p className="subtitle">Pilih ruang saja, peralatan saja, atau keduanya.</p>
+        <h1 className={ui.title}>Tambah Peminjaman</h1>
+        <p className={ui.subtitle}>Pilih ruang saja, peralatan saja, atau keduanya.</p>
       </div>
-      <div className="form-grid">
+      <div className={ui.formGrid}>
         {fixedBorrower ? (
           <label>Peminjam
             <input value={selectedBorrower?.name ?? "Akun belum terhubung ke peminjam"} readOnly />
@@ -136,12 +138,12 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
         </label>
       </div>
       <label>Keperluan<textarea name="purpose" required /></label>
-      <div className="panel">
+      <div className={ui.panel}>
         <h2>Peralatan</h2>
-        <p className="subtitle">Klik tambah peralatan jika ingin meminjam barang. Biarkan kosong jika hanya meminjam ruang.</p>
-        <div className="stack">
+        <p className={ui.subtitle}>Klik tambah peralatan jika ingin meminjam barang. Biarkan kosong jika hanya meminjam ruang.</p>
+        <div className={ui.stack}>
           {equipmentRows.map((row, index) => (
-            <div className="equipment-row" key={row.id}>
+            <div className={ui.equipmentRow} key={row.id}>
               <label>Barang {index + 1}
                 <select name="equipmentId" required>
                   <option value="">Pilih barang</option>
@@ -165,23 +167,23 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
                   type="number"
                 />
               </label>
-              <button className="danger" onClick={() => removeEquipmentRow(row.id)} type="button">
+              <button className={ui.dangerButton} onClick={() => removeEquipmentRow(row.id)} type="button">
                 Hapus
               </button>
             </div>
           ))}
           {equipmentRows.length === 0 ? (
-            <p className="empty-note">Belum ada peralatan dipilih.</p>
+            <p className={ui.emptyNote}>Belum ada peralatan dipilih.</p>
           ) : null}
-          <button className="button ghost" onClick={addEquipmentRow} type="button">
+          <button className={ui.ghostButton} onClick={addEquipmentRow} type="button">
             Tambah Peralatan
           </button>
         </div>
       </div>
-      <section className="panel">
+      <section className={ui.panel}>
         <h2>Timetable Peminjaman</h2>
-        <p className="subtitle">Jadwal sederhana untuk melihat waktu yang sudah dipakai.</p>
-        <div className="table-wrap">
+        <p className={ui.subtitle}>Jadwal sederhana untuk melihat waktu yang sudah dipakai.</p>
+        <div className={ui.tableWrap}>
           <table>
             <thead>
               <tr>
@@ -202,7 +204,7 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
                   <td>{booking.borrowerName}</td>
                   <td>{booking.roomName}</td>
                   <td>{booking.equipment}</td>
-                  <td><span className="badge">{booking.status}</span></td>
+                  <td><span className={ui.badge}>{booking.status}</span></td>
                 </tr>
               ))}
               {existingBookings.length === 0 ? (
@@ -214,9 +216,9 @@ export function BorrowingForm({ borrowers, rooms, equipment, existingBookings, f
           </table>
         </div>
       </section>
-      <div className="actions">
-        <button type="submit">Simpan</button>
-        <Link className="button ghost" href="/borrowings">Batal</Link>
+      <div className={ui.actions}>
+        <button className={ui.button} type="submit">Simpan</button>
+        <Link className={ui.ghostButton} href="/borrowings">Batal</Link>
       </div>
     </form>
   );

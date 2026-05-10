@@ -27,8 +27,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     : null;
 
   return (
-    <html lang="id">
-      <body>
+    <html className="overflow-x-hidden" lang="id">
+      <body className="m-0 overflow-x-hidden bg-app-bg font-sans text-app-text">
         <AppShell account={shellAccount}>{children}</AppShell>
       </body>
     </html>

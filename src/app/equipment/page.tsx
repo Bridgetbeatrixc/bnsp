@@ -8,6 +8,8 @@ import { deleteEquipment } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 // Service peralatan mengambil data dari database.
 import { EquipmentService } from "@/services/EquipmentService";
+// Utility Tailwind bersama untuk layout, tabel, dan tombol.
+import { ui } from "@/lib/ui";
 
 // Halaman ini dinamis karena membaca database dan session.
 export const dynamic = "force-dynamic";
@@ -27,13 +29,13 @@ export default async function EquipmentPage({
   const error = searchParams?.error;
 
   return (
-    <div className="stack">
-      <div className="topbar">
+    <div className={ui.stack}>
+      <div className={ui.topbar}>
         <div>
-          <h1 className="title">Manajemen Peralatan</h1>
-          <p className="subtitle">Kelola kode, kategori, dan stok peralatan pendukung.</p>
+          <h1 className={ui.title}>Manajemen Peralatan</h1>
+          <p className={ui.subtitle}>Kelola kode, kategori, dan stok peralatan pendukung.</p>
         </div>
-        <Link className="button" href="/equipment/new">Tambah</Link>
+        <Link className={ui.button} href="/equipment/new">Tambah</Link>
       </div>
       {success === "created" ? <FlashMessage message="Peralatan berhasil ditambahkan." type="success" /> : null}
       {success === "updated" ? <FlashMessage message="Peralatan berhasil diubah." type="success" /> : null}
@@ -41,7 +43,7 @@ export default async function EquipmentPage({
         <FlashMessage message="Peralatan berhasil dihapus dari daftar aktif. Riwayat peminjaman lama tetap tersimpan." type="success" />
       ) : null}
       {error === "delete-used" ? <FlashMessage message="Peralatan gagal dihapus." type="error" /> : null}
-      <div className="table-wrap">
+      <div className={ui.tableWrap}>
         <table>
           <thead><tr><th>Kode</th><th>Nama</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead>
           <tbody>
@@ -51,10 +53,10 @@ export default async function EquipmentPage({
                 <td>{item.name}</td>
                 <td>{item.category}</td>
                 <td>{item.stock}</td>
-                <td className="actions">
-                  <Link className="button ghost" href={`/equipment/${item.id}/edit`}>Ubah</Link>
+                <td className={ui.actions}>
+                  <Link className={ui.ghostButton} href={`/equipment/${item.id}/edit`}>Ubah</Link>
                   <form action={deleteEquipment.bind(null, item.id)}>
-                    <button className="danger" type="submit">Hapus</button>
+                    <button className={ui.dangerButton} type="submit">Hapus</button>
                   </form>
                 </td>
               </tr>

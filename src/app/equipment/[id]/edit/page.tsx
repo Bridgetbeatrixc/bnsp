@@ -2,6 +2,7 @@ import { FlashMessage } from "@/components/FlashMessage";
 import { EquipmentForm } from "@/components/forms/EquipmentForm";
 import { updateEquipment } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
+import { ui } from "@/lib/ui";
 import { EquipmentService } from "@/services/EquipmentService";
 
 export const dynamic = "force-dynamic";
@@ -16,7 +17,7 @@ export default async function EditEquipmentPage({
   await requireAdmin();
   const equipment = await new EquipmentService().findById(params.id);
   return (
-    <div className="stack">
+    <div className={ui.stack}>
       {searchParams?.error === "save" ? (
         <FlashMessage message="Peralatan gagal diubah. Periksa field wajib, stok, atau kode yang sudah dipakai." type="error" />
       ) : null}

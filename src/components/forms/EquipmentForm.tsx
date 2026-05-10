@@ -2,6 +2,8 @@
 
 // Link dipakai untuk tombol batal kembali ke daftar peralatan.
 import Link from "next/link";
+// Utility Tailwind bersama untuk form dan tombol.
+import { cx, ui } from "@/lib/ui";
 // Tipe event React dipakai untuk validasi input angka di browser.
 import type { ClipboardEvent, KeyboardEvent } from "react";
 
@@ -38,12 +40,12 @@ type EquipmentFormProps = {
 // Form peralatan untuk kode, nama, kategori, dan stok.
 export function EquipmentForm({ title, equipment, action }: EquipmentFormProps) {
   return (
-    <form action={action} className="panel stack">
+    <form action={action} className={cx(ui.panel, ui.stack, ui.formControls)}>
       <div>
-        <h1 className="title">{title}</h1>
-        <p className="subtitle">Stok dipakai untuk validasi transaksi peminjaman.</p>
+        <h1 className={ui.title}>{title}</h1>
+        <p className={ui.subtitle}>Stok dipakai untuk validasi transaksi peminjaman.</p>
       </div>
-      <div className="form-grid">
+      <div className={ui.formGrid}>
         <label>Kode<input name="code" defaultValue={equipment?.code} required /></label>
         <label>Nama<input name="name" defaultValue={equipment?.name} required /></label>
         <label>Kategori<input name="category" defaultValue={equipment?.category} required /></label>
@@ -61,9 +63,9 @@ export function EquipmentForm({ title, equipment, action }: EquipmentFormProps) 
           />
         </label>
       </div>
-      <div className="actions">
-        <button type="submit">Simpan</button>
-        <Link className="button ghost" href="/equipment">Batal</Link>
+      <div className={ui.actions}>
+        <button className={ui.button} type="submit">Simpan</button>
+        <Link className={ui.ghostButton} href="/equipment">Batal</Link>
       </div>
     </form>
   );

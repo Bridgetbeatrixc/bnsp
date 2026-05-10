@@ -4,6 +4,8 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 // Service peminjaman dipakai untuk membuat preview laporan.
 import { BorrowingService } from "@/services/BorrowingService";
+// Utility Tailwind bersama untuk layout, tabel, dan tombol.
+import { cx, ui } from "@/lib/ui";
 
 // Halaman laporan dinamis karena membaca session admin.
 export const dynamic = "force-dynamic";
@@ -24,37 +26,37 @@ export default async function ReportsPage() {
   const previewRows = borrowings.slice(0, 10);
 
   return (
-    <div className="stack">
-      <div className="panel stack">
-        <div className="topbar report-head">
+    <div className={ui.stack}>
+      <div className={cx(ui.panel, ui.stack)}>
+        <div className={cx(ui.topbar, "mb-0")}>
           <div>
-            <h1 className="title">Laporan Peminjaman</h1>
-            <p className="subtitle">Preview rekap peminjaman sebelum export menggunakan ExcelJS.</p>
+            <h1 className={ui.title}>Laporan Peminjaman</h1>
+            <p className={ui.subtitle}>Preview rekap peminjaman sebelum export menggunakan ExcelJS.</p>
           </div>
-          <Link className="button" href="/reports/export">Export Excel</Link>
+          <Link className={ui.button} href="/reports/export">Export Excel</Link>
         </div>
-        <div className="grid report-metrics">
-          <div className="card">
-            <p className="subtitle">Total Transaksi</p>
-            <div className="metric">{totalBorrowings}</div>
+        <div className="grid grid-cols-3 gap-4 max-lg:grid-cols-3 max-md:grid-cols-1">
+          <div className={ui.card}>
+            <p className={ui.subtitle}>Total Transaksi</p>
+            <div className={ui.metric}>{totalBorrowings}</div>
           </div>
-          <div className="card">
-            <p className="subtitle">Menunggu</p>
-            <div className="metric">{pendingBorrowings}</div>
+          <div className={ui.card}>
+            <p className={ui.subtitle}>Menunggu</p>
+            <div className={ui.metric}>{pendingBorrowings}</div>
           </div>
-          <div className="card">
-            <p className="subtitle">Selesai</p>
-            <div className="metric">{completedBorrowings}</div>
+          <div className={ui.card}>
+            <p className={ui.subtitle}>Selesai</p>
+            <div className={ui.metric}>{completedBorrowings}</div>
           </div>
         </div>
       </div>
 
-      <div className="panel stack">
+      <div className={cx(ui.panel, ui.stack)}>
         <div>
-          <h2 className="title">Preview Laporan</h2>
-          <p className="subtitle">Menampilkan 10 transaksi terbaru dari data yang akan diexport.</p>
+          <h2 className={ui.title}>Preview Laporan</h2>
+          <p className={ui.subtitle}>Menampilkan 10 transaksi terbaru dari data yang akan diexport.</p>
         </div>
-        <div className="table-wrap">
+        <div className={ui.tableWrap}>
           <table>
             <thead>
               <tr>
@@ -72,7 +74,7 @@ export default async function ReportsPage() {
               {previewRows.map((borrowing) => (
                 <tr key={borrowing.id}>
                   <td>{borrowing.borrower.name}</td>
-                  <td><span className="badge">{borrowing.borrower.accountType}</span></td>
+                  <td><span className={ui.badge}>{borrowing.borrower.accountType}</span></td>
                   <td>{borrowing.room?.name ?? "-"}</td>
                   <td>{borrowing.usageDate.toISOString().slice(0, 10)}</td>
                   <td>{borrowing.durationHours} jam</td>
@@ -83,7 +85,7 @@ export default async function ReportsPage() {
                         ))
                       : "-"}
                   </td>
-                  <td><span className="badge">{borrowing.status}</span></td>
+                  <td><span className={ui.badge}>{borrowing.status}</span></td>
                   <td>{borrowing.purpose}</td>
                 </tr>
               ))}

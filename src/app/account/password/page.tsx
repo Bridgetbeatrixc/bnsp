@@ -2,6 +2,8 @@
 import { changePassword } from "@/lib/actions";
 // requireAccount memastikan hanya user login yang bisa membuka halaman ini.
 import { requireAccount } from "@/lib/auth";
+// Utility Tailwind bersama untuk form ganti password.
+import { cx, ui } from "@/lib/ui";
 
 // Halaman ini dinamis karena membaca session login.
 export const dynamic = "force-dynamic";
@@ -20,19 +22,19 @@ export default async function ChangePasswordPage({
   const isSuccess = searchParams?.success === "1";
 
   return (
-    <div className="stack">
+    <div className={ui.stack}>
       <div>
-        <h1 className="title">Ganti Password</h1>
-        <p className="subtitle">Ubah password untuk akun {account.username}.</p>
+        <h1 className={ui.title}>Ganti Password</h1>
+        <p className={ui.subtitle}>Ubah password untuk akun {account.username}.</p>
       </div>
-      <form action={changePassword} className="panel stack password-form">
+      <form action={changePassword} className={cx(ui.panel, ui.stack, ui.formControls)}>
         {hasError ? (
-          <p className="error-message">Password lama salah, password baru terlalu pendek, atau konfirmasi tidak sama.</p>
+          <p className={ui.errorMessage}>Password lama salah, password baru terlalu pendek, atau konfirmasi tidak sama.</p>
         ) : null}
         {isSuccess ? (
-          <p className="success-message">Password berhasil diganti.</p>
+          <p className={ui.successMessage}>Password berhasil diganti.</p>
         ) : null}
-        <div className="form-grid">
+        <div className={ui.formGrid}>
           <label>
             Password Lama
             <input name="currentPassword" required type="password" />
@@ -46,8 +48,8 @@ export default async function ChangePasswordPage({
             <input minLength={6} name="confirmPassword" required type="password" />
           </label>
         </div>
-        <div className="actions">
-          <button type="submit">Simpan Password</button>
+        <div className={ui.actions}>
+          <button className={ui.button} type="submit">Simpan Password</button>
         </div>
       </form>
     </div>

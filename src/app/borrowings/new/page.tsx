@@ -6,6 +6,8 @@ import { BorrowingForm } from "@/components/forms/BorrowingForm";
 import { createBorrowing } from "@/lib/actions";
 // requireAccount memastikan user sudah login.
 import { requireAccount } from "@/lib/auth";
+// Utility Tailwind bersama untuk stack halaman.
+import { ui } from "@/lib/ui";
 // Service peminjam dipakai admin untuk memilih borrower.
 import { BorrowerService } from "@/services/BorrowerService";
 // Service peminjaman dipakai untuk data timetable.
@@ -34,7 +36,7 @@ export default async function NewBorrowingPage({ searchParams }: { searchParams?
   const existingBookings = await new BorrowingService().findAll();
 
   return (
-    <div className="stack">
+    <div className={ui.stack}>
       {searchParams?.error === "save" ? (
         <FlashMessage message="Peminjaman gagal disimpan. Periksa tanggal, durasi, stok, dan minimal pilih ruang atau peralatan." type="error" />
       ) : null}

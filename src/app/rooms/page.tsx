@@ -8,6 +8,8 @@ import { deleteRoom } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 // Service ruang mengambil data dari database.
 import { RoomService } from "@/services/RoomService";
+// Utility Tailwind bersama untuk layout, tabel, dan tombol.
+import { ui } from "@/lib/ui";
 
 // Halaman ini dinamis karena membaca database dan session.
 export const dynamic = "force-dynamic";
@@ -27,13 +29,13 @@ export default async function RoomsPage({
   const error = searchParams?.error;
 
   return (
-    <div className="stack">
-      <div className="topbar">
+    <div className={ui.stack}>
+      <div className={ui.topbar}>
         <div>
-          <h1 className="title">Manajemen Ruang</h1>
-          <p className="subtitle">Kelola kapasitas, gedung, lantai, dan ketersediaan ruang.</p>
+          <h1 className={ui.title}>Manajemen Ruang</h1>
+          <p className={ui.subtitle}>Kelola kapasitas, gedung, lantai, dan ketersediaan ruang.</p>
         </div>
-        <Link className="button" href="/rooms/new">Tambah</Link>
+        <Link className={ui.button} href="/rooms/new">Tambah</Link>
       </div>
       {success === "created" ? <FlashMessage message="Ruang berhasil ditambahkan." type="success" /> : null}
       {success === "updated" ? <FlashMessage message="Ruang berhasil diubah." type="success" /> : null}
@@ -41,7 +43,7 @@ export default async function RoomsPage({
       {error === "delete-used" ? (
         <FlashMessage message="Ruang tidak bisa dihapus karena sudah dipakai pada data peminjaman." type="error" />
       ) : null}
-      <div className="table-wrap">
+      <div className={ui.tableWrap}>
         <table>
           <thead><tr><th>Kode</th><th>Nama</th><th>Kapasitas</th><th>Lokasi</th><th>Status</th><th>Aksi</th></tr></thead>
           <tbody>
@@ -51,11 +53,11 @@ export default async function RoomsPage({
                 <td>{room.name}</td>
                 <td>{room.capacity}</td>
                 <td>{room.building}, Lantai {room.floor}</td>
-                <td><span className="badge">{room.status}</span></td>
-                <td className="actions">
-                  <Link className="button ghost" href={`/rooms/${room.id}/edit`}>Ubah</Link>
+                <td><span className={ui.badge}>{room.status}</span></td>
+                <td className={ui.actions}>
+                  <Link className={ui.ghostButton} href={`/rooms/${room.id}/edit`}>Ubah</Link>
                   <form action={deleteRoom.bind(null, room.id)}>
-                    <button className="danger" type="submit">Hapus</button>
+                    <button className={ui.dangerButton} type="submit">Hapus</button>
                   </form>
                 </td>
               </tr>
