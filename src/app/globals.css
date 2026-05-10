@@ -51,7 +51,7 @@
 
 @layer components {
   .shell {
-    @apply grid min-h-screen grid-cols-[260px_1fr] max-lg:grid-cols-[220px_1fr] max-md:grid-cols-1;
+    @apply grid min-h-screen grid-cols-[260px_minmax(0,1fr)] max-lg:grid-cols-[220px_minmax(0,1fr)] max-md:grid-cols-1;
   }
 
   .sidebar {
@@ -107,8 +107,12 @@
     @apply min-w-0 p-7 max-md:p-3.5 max-[420px]:p-2.5;
   }
 
+  .content > .stack {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
   .topbar {
-    @apply mb-5 flex items-center justify-between gap-4 max-md:flex-col max-md:items-stretch;
+    @apply mb-5 flex w-full items-start justify-between gap-4 max-md:flex-col max-md:items-stretch;
   }
 
   .title {
@@ -134,12 +138,20 @@
     @apply mt-2 text-[34px] font-bold text-app-primary;
   }
 
+  .report-head {
+    @apply mb-0;
+  }
+
+  .report-metrics {
+    @apply grid-cols-3 max-lg:grid-cols-3 max-md:grid-cols-1;
+  }
+
   .table-wrap {
-    @apply overflow-x-auto max-md:-mx-0.5 max-md:rounded-lg max-md:border max-md:border-app-line;
+    @apply w-full overflow-x-auto rounded-lg border border-app-line bg-app-panel max-md:-mx-0.5;
   }
 
   .table-wrap table {
-    @apply max-md:min-w-[680px];
+    @apply min-w-[760px];
   }
 
   .table-wrap th,

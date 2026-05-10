@@ -26,14 +26,14 @@ export default async function ReportsPage() {
   return (
     <div className="stack">
       <div className="panel stack">
-        <div className="topbar">
+        <div className="topbar report-head">
           <div>
             <h1 className="title">Laporan Peminjaman</h1>
             <p className="subtitle">Preview rekap peminjaman sebelum export menggunakan ExcelJS.</p>
           </div>
           <Link className="button" href="/reports/export">Export Excel</Link>
         </div>
-        <div className="grid">
+        <div className="grid report-metrics">
           <div className="card">
             <p className="subtitle">Total Transaksi</p>
             <div className="metric">{totalBorrowings}</div>
