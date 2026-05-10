@@ -1,12 +1,10 @@
-// NextRequest memberi akses ke request yang sedang masuk.
-import { type NextRequest } from "next/server";
-// Middleware Supabase juga dipakai untuk menyisipkan pathname ke header.
-import { updateSession } from "@/utils/supabase/middleware";
+// NextResponse meneruskan request tanpa call tambahan.
+import { NextResponse } from "next/server";
 
 // Middleware berjalan sebelum halaman dirender.
-export async function middleware(request: NextRequest) {
-  // Update session Supabase dan teruskan pathname ke layout.
-  return updateSession(request);
+export function middleware() {
+  // Aplikasi memakai cookie custom, jadi tidak perlu refresh session Supabase di setiap route.
+  return NextResponse.next();
 }
 
 // Matcher menentukan route mana saja yang melewati middleware.

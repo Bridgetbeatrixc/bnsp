@@ -233,6 +233,6 @@
   }
 
   .stack {
-    @apply grid gap-[18px] max-[420px]:gap-3.5;
+    @apply flex flex-col gap-[18px] max-[420px]:gap-3.5;
   }
 }
