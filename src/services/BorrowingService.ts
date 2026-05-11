@@ -12,6 +12,15 @@ import {
 // Status ini dianggap masih memblokir jadwal ruang.
 const activeRoomStatuses = [BorrowingStatus.MENUNGGU, BorrowingStatus.DISETUJUI];
 
+// Pesan khusus saat ruang sudah dipakai pada jadwal yang sama.
+export const roomScheduleConflictMessage = "Ruang sudah dipinjam pada jadwal tersebut";
+
+// Mengecek apakah error berasal dari bentrok jadwal ruang.
+export function isRoomScheduleConflictError(error: unknown) {
+  // Server action memakai helper ini agar bisa menampilkan notice yang spesifik.
+  return error instanceof Error && error.message === roomScheduleConflictMessage;
+}
+
 // Mengecek apakah status peminjaman masih memblokir jadwal ruang.
 function isActiveRoomStatus(status: string) {
   // Menunggu dan disetujui dianggap belum bebas untuk dipakai orang lain.
@@ -68,7 +77,7 @@ async function ensureRoomScheduleIsAvailable(roomId: string | undefined, usageDa
 
   // Jika overlap, transaksi ditolak agar ruang tidak double-booking.
   if (hasOverlap) {
-    throw new Error("Ruang sudah dipinjam pada jadwal tersebut");
+    throw new Error(roomScheduleConflictMessage);
   }
 }
 

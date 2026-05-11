@@ -101,6 +101,9 @@ export default async function BorrowingsPage({
       </div>
       {success === "created" ? <FlashMessage message="Peminjaman berhasil dibuat." type="success" /> : null}
       {success === "status" ? <FlashMessage message="Status peminjaman berhasil diupdate." type="success" /> : null}
+      {error === "room-booked" ? (
+        <FlashMessage message="Jadwal gagal diupdate karena ruangan sudah dibooking pada jadwal tersebut." type="error" />
+      ) : null}
       {error === "status" ? (
         <FlashMessage message="Status gagal diupdate. Periksa jadwal ruang, durasi, dan waktu pengembalian jika status selesai." type="error" />
       ) : null}

@@ -9,7 +9,7 @@ import { AccountService } from "@/services/AccountService";
 // Service peminjam menangani CRUD data mahasiswa/dosen.
 import { BorrowerService } from "@/services/BorrowerService";
 // Service peminjaman menangani transaksi peminjaman.
-import { BorrowingService } from "@/services/BorrowingService";
+import { BorrowingService, isRoomScheduleConflictError } from "@/services/BorrowingService";
 // Service peralatan menangani CRUD stok dan kategori barang.
 import { EquipmentService } from "@/services/EquipmentService";
 // Service ruang menangani CRUD data ruang.
@@ -287,7 +287,11 @@ export async function createBorrowing(formData: FormData) {
       borrowerId,
       equipmentItems
     });
-  } catch {
+  } catch (error) {
+    // Jika ruang sudah dipakai pada jam yang sama, tampilkan notice khusus.
+    if (isRoomScheduleConflictError(error)) {
+      redirect("/borrowings/new?error=room-booked");
+    }
     // Kembali ke form jika transaksi gagal disimpan.
     redirect("/borrowings/new?error=save");
   }
@@ -305,7 +309,11 @@ export async function updateBorrowingStatus(id: string, formData: FormData) {
   try {
     // Validasi status dan simpan perubahan.
     await new BorrowingService().updateStatus(id, toObject(formData));
-  } catch {
+  } catch (error) {
+    // Jika edit jadwal membuat ruang bentrok, tampilkan notice khusus.
+    if (isRoomScheduleConflictError(error)) {
+      redirect("/borrowings?error=room-booked");
+    }
     // Kembali ke daftar peminjaman dengan pesan gagal.
     redirect("/borrowings?error=status");
   }

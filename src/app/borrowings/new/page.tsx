@@ -37,6 +37,9 @@ export default async function NewBorrowingPage({ searchParams }: { searchParams?
 
   return (
     <div className={ui.stack}>
+      {searchParams?.error === "room-booked" ? (
+        <FlashMessage message="Ruangan sudah dibooking pada jadwal tersebut. Silakan pilih jam lain atau ruang lain." type="error" />
+      ) : null}
       {searchParams?.error === "save" ? (
         <FlashMessage message="Peminjaman gagal disimpan. Periksa tanggal, durasi, stok, jadwal ruang, dan minimal pilih ruang atau peralatan." type="error" />
       ) : null}
