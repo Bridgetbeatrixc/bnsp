@@ -38,7 +38,7 @@ export default async function NewBorrowingPage({ searchParams }: { searchParams?
   return (
     <div className={ui.stack}>
       {searchParams?.error === "save" ? (
-        <FlashMessage message="Peminjaman gagal disimpan. Periksa tanggal, durasi, stok, dan minimal pilih ruang atau peralatan." type="error" />
+        <FlashMessage message="Peminjaman gagal disimpan. Periksa tanggal, durasi, stok, jadwal ruang, dan minimal pilih ruang atau peralatan." type="error" />
       ) : null}
       <BorrowingForm
         action={createBorrowing}

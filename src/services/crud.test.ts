@@ -15,6 +15,7 @@ const prismaMock = vi.hoisted(() => ({
   borrowing: {
     create: vi.fn(),
     findMany: vi.fn(),
+    findUniqueOrThrow: vi.fn(),
     update: vi.fn()
   },
   equipment: {
@@ -77,6 +78,7 @@ const borrowingInput = {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  prismaMock.borrowing.findMany.mockResolvedValue([]);
 });
 
 describe("BorrowerService CRUD", () => {
@@ -333,6 +335,28 @@ describe("BorrowingService transaction flow", () => {
     expect(prismaMock.borrowing.create).not.toHaveBeenCalled();
   });
 
+  it("rejects room borrowing when schedule overlaps an active borrowing", async () => {
+    prismaMock.equipment.findMany.mockResolvedValue([{ id: "equipment-1", stock: 2 }]);
+    prismaMock.borrowing.findMany.mockResolvedValue([
+      { id: "borrowing-2", usageDate: new Date("2026-05-10T10:00"), durationHours: 2 }
+    ]);
+
+    await expect(new BorrowingService().create(borrowingInput)).rejects.toThrow("Ruang sudah dipinjam");
+    expect(prismaMock.borrowing.create).not.toHaveBeenCalled();
+  });
+
+  it("allows room borrowing when schedule does not overlap", async () => {
+    prismaMock.equipment.findMany.mockResolvedValue([{ id: "equipment-1", stock: 2 }]);
+    prismaMock.borrowing.findMany.mockResolvedValue([
+      { id: "borrowing-2", usageDate: new Date("2026-05-10T11:00"), durationHours: 1 }
+    ]);
+    prismaMock.borrowing.create.mockResolvedValue({ id: "borrowing-1" });
+
+    await new BorrowingService().create(borrowingInput);
+
+    expect(prismaMock.borrowing.create).toHaveBeenCalled();
+  });
+
   it("updates borrowing status and actual return time", async () => {
     prismaMock.borrowing.update.mockResolvedValue({ id: "borrowing-1" });
 
@@ -352,5 +376,22 @@ describe("BorrowingService transaction flow", () => {
         actualReturnTime: new Date("2026-05-10T12:00")
       }
     });
+  });
+
+  it("rejects status update when edited room schedule overlaps another active borrowing", async () => {
+    prismaMock.borrowing.findUniqueOrThrow.mockResolvedValue({ roomId: "room-1" });
+    prismaMock.borrowing.findMany.mockResolvedValue([
+      { id: "borrowing-2", usageDate: new Date("2026-05-10T10:00"), durationHours: 2 }
+    ]);
+
+    await expect(
+      new BorrowingService().updateStatus("borrowing-1", {
+        status: "DISETUJUI",
+        usageDate: "2026-05-10T09:00",
+        durationHours: 2,
+        actualReturnTime: ""
+      })
+    ).rejects.toThrow("Ruang sudah dipinjam");
+    expect(prismaMock.borrowing.update).not.toHaveBeenCalled();
   });
 });

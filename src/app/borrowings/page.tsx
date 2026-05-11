@@ -102,7 +102,7 @@ export default async function BorrowingsPage({
       {success === "created" ? <FlashMessage message="Peminjaman berhasil dibuat." type="success" /> : null}
       {success === "status" ? <FlashMessage message="Status peminjaman berhasil diupdate." type="success" /> : null}
       {error === "status" ? (
-        <FlashMessage message="Status gagal diupdate. Jika memilih selesai, waktu pengembalian wajib diisi." type="error" />
+        <FlashMessage message="Status gagal diupdate. Periksa jadwal ruang, durasi, dan waktu pengembalian jika status selesai." type="error" />
       ) : null}
       <div className={ui.tableWrap}>
         <table>
