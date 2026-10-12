@@ -1,131 +1,92 @@
 # Universitas XYZ Borrowing System
 
-Sistem peminjaman ruang dan peralatan untuk studi kasus BNSP programmer.
+A room and equipment borrowing system for a university, built as the case study for the BNSP (Indonesian National Professional Certification Agency) programmer certification.
 
-## Stack
+**Live demo:** https://universitas-xyz-borrowing.vercel.app
+
+## Features
+
+- Role-based login for admins, students and lecturers
+- CRUD for borrowers (students and lecturers), rooms and equipment
+- Borrowing transactions with multiple equipment items per request
+- Validation of required fields, dates, duration and stock
+- Only admins can change a borrowing's status
+- Excel report export
+- Unit tests for critical input validation
+
+## Access control
+
+- Admins can access every menu, manage master data, export reports and update borrowing status.
+- Students and lecturers only see their own dashboard, submit borrowing requests and view their own history.
+- Students and lecturers cannot set a status to `DISETUJUI` (approved), `DITOLAK` (rejected) or `SELESAI` (completed).
+
+## Tech stack
 
 - Next.js + TypeScript
-- Supabase PostgreSQL
-- Supabase SSR client helpers
+- Supabase PostgreSQL with Supabase SSR client helpers
 - Prisma ORM
 - Zod validation
 - ExcelJS export
-- Vitest unit test
+- Vitest unit tests
 
-## Setup
-
-1. Buka project Supabase `ljvttalliqfmtfudsqwu`.
-2. Isi `.env` dengan password database Supabase pada bagian `DATABASE_URL`.
-   Jika password mengandung karakter khusus, URL-encode password terlebih dahulu.
-3. Install dependency:
-
-```bash
-npm install
-```
-
-4. Push schema ke Supabase:
-
-```bash
-npm run db:push
-```
-
-5. Jalankan seed data contoh:
-
-```bash
-npm run db:seed
-```
-
-6. Jalankan aplikasi:
-
-```bash
-npm run dev
-```
-
-The Supabase browser/server helpers are available in:
-
-- `src/utils/supabase/client.ts`
-- `src/utils/supabase/server.ts`
-- `src/utils/supabase/middleware.ts`
-- `src/middleware.ts`
-
-## Supabase CLI
-
-Supabase CLI bersifat opsional untuk project ini karena Prisma langsung terhubung ke Supabase PostgreSQL melalui `DATABASE_URL`.
-Jika Supabase CLI sudah terpasang, jalankan:
-
-```bash
-supabase login
-supabase init
-supabase link --project-ref ljvttalliqfmtfudsqwu
-```
-
-Untuk push schema database dengan Prisma, perintah yang dipakai tetap:
-
-```bash
-npm run db:push
-```
-
-## Jika `npm run db:push` Error P1001
-
-Direct database host Supabase `db.ljvttalliqfmtfudsqwu.supabase.co:5432` hanya resolve ke IPv6 di beberapa project/network.
-Jika komputer/jaringan tidak mendukung IPv6, Prisma akan gagal menjangkau database.
-
-Solusi termudah:
-
-1. Buka Supabase Dashboard.
-2. Klik **Connect**.
-3. Pilih connection string **Session pooler**.
-4. Masukkan connection string tersebut ke `DATABASE_URL`.
-5. Jalankan ulang:
-
-```bash
-npm run db:push
-```
-
-Format Session pooler biasanya seperti:
-
-```env
-DATABASE_URL="postgres://postgres.ljvttalliqfmtfudsqwu:YOUR_PASSWORD@aws-0-YOUR_REGION.pooler.supabase.com:5432/postgres"
-```
-
-Untuk deployment serverless, gunakan Transaction pooler dan tambahkan `pgbouncer=true` jika Prisma mengalami error prepared statement.
-
-## Test
-
-```bash
-npm test
-```
-
-## Fitur
-
-- Login role admin, mahasiswa, dan dosen
-- CRUD peminjam mahasiswa/dosen
-- CRUD ruang
-- CRUD peralatan
-- Transaksi peminjaman dengan banyak peralatan
-- Validasi field wajib, tanggal, durasi, dan stok
-- Update status peminjaman hanya oleh admin
-- Export laporan Excel
-- Unit test validasi input kritis
-
-## Demo Login
+## Demo accounts
 
 ```text
 ADMIN
 username: admin
 password: admin123
 
-MAHASISWA
+STUDENT
 username: alya
 password: mahasiswa123
 
-DOSEN
+LECTURER
 username: bima
 password: dosen123
 ```
 
-## Hak Akses
+## Getting started
 
-- Admin dapat mengakses semua menu, CRUD master data, export laporan, dan update status peminjaman.
-- Mahasiswa dan dosen hanya melihat dashboard pribadi, mengajukan peminjaman, dan melihat riwayat sendiri.
-- Mahasiswa dan dosen tidak dapat mengubah status `DISETUJUI`, `DITOLAK`, atau `SELESAI`.
+1. Create a Supabase project and copy `.env.example` to `.env`.
+2. Fill in `DATABASE_URL` with your Supabase database password. URL-encode the password if it contains special characters.
+3. Install dependencies, push the schema, seed sample data and start the app:
+
+```bash
+npm install
+npm run db:push
+npm run db:seed
+npm run dev
+```
+
+The Supabase browser and server helpers live in:
+
+- `src/utils/supabase/client.ts`
+- `src/utils/supabase/server.ts`
+- `src/utils/supabase/middleware.ts`
+- `src/middleware.ts`
+
+### Supabase CLI (optional)
+
+The CLI is optional because Prisma connects to Supabase PostgreSQL directly through `DATABASE_URL`. If you have it installed:
+
+```bash
+supabase login
+supabase init
+supabase link --project-ref <your-project-ref>
+```
+
+### If `npm run db:push` fails with P1001
+
+On some projects the direct database host (`db.<project-ref>.supabase.co:5432`) only resolves to IPv6. If your network doesn't support IPv6, Prisma can't reach the database. The easiest fix is to open the Supabase dashboard, click **Connect**, choose the **Session pooler** connection string and put it in `DATABASE_URL`:
+
+```env
+DATABASE_URL="postgres://postgres.<project-ref>:YOUR_PASSWORD@aws-0-YOUR_REGION.pooler.supabase.com:5432/postgres"
+```
+
+For serverless deployments, use the Transaction pooler and add `pgbouncer=true` if Prisma reports prepared statement errors.
+
+## Tests
+
+```bash
+npm test
+```
